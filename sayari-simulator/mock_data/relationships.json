@@ -1,0 +1,783 @@
+{
+  "data": [
+    {
+      "id": "rel_54321",
+      "source": { "id": "entity_54321", "label": "BOS" },
+      "target": { "id": "entity_87654", "label": "BOS Components GmbH" },
+      "type": "has_subsidiary",
+      "metadata": { "share": "100%" }
+    },
+    {
+      "id": "rel_54322",
+      "source": { "id": "entity_54321", "label": "BOS" },
+      "target": { "id": "entity_87655", "label": "BOS Automotive Products" },
+      "type": "has_subsidiary",
+      "metadata": { "share": "100%" }
+    },
+    {
+      "id": "rel_12345",
+      "source": { "id": "entity_12345", "label": "Acme Corporation" },
+      "target": { "id": "entity_67890", "label": "Acme International Ltd" },
+      "type": "has_subsidiary",
+      "metadata": { "share": "100%" }
+    },
+    {
+      "id": "rel_67890",
+      "source": { "id": "entity_12345", "label": "Acme Corporation" },
+      "target": { "id": "entity_24680", "label": "John Smith" },
+      "type": "has_officer",
+      "metadata": { "position": "CEO" }
+    },
+    {
+      "id": "rel_11112",
+      "source": { "id": "entity_11111", "label": "MB Tool" },
+      "target": { "id": "entity_11112", "label": "MB Tool Development" },
+      "type": "has_subsidiary",
+      "metadata": { "share": "85%" }
+    },
+    {
+      "id": "rel_11113",
+      "source": { "id": "entity_11111", "label": "MB Tool" },
+      "target": { "id": "entity_11113", "label": "Jan Novák" },
+      "type": "has_officer",
+      "metadata": { "position": "CEO" }
+    },
+    {
+      "id": "rel_22223",
+      "source": { "id": "entity_22222", "label": "Flidr Plast" },
+      "target": { "id": "entity_22223", "label": "Flidr Plastics International" },
+      "type": "has_subsidiary",
+      "metadata": { "share": "70%" }
+    },
+    {
+      "id": "rel_22224",
+      "source": { "id": "entity_22222", "label": "Flidr Plast" },
+      "target": { "id": "entity_22224", "label": "Petr Flidr" },
+      "type": "has_officer",
+      "metadata": { "position": "Chairman" }
+    },
+    {
+      "id": "rel_33334",
+      "source": { "id": "entity_33333", "label": "Fuyao Group" },
+      "target": { "id": "entity_33334", "label": "Fuyao Glass North America" },
+      "type": "has_subsidiary",
+      "metadata": { "share": "100%" }
+    },
+    {
+      "id": "rel_33335",
+      "source": { "id": "entity_33333", "label": "Fuyao Group" },
+      "target": { "id": "entity_33335", "label": "Fuyao Glass Europe" },
+      "type": "has_subsidiary",
+      "metadata": { "share": "100%" }
+    },
+    {
+      "id": "rel_33336",
+      "source": { "id": "entity_33333", "label": "Fuyao Group" },
+      "target": { "id": "entity_33336", "label": "Cho Tak Wong" },
+      "type": "has_officer",
+      "metadata": { "position": "Chairman, Founder" }
+    },
+    {
+      "id": "rel_55556",
+      "source": { "id": "entity_55555", "label": "Hauk" },
+      "target": { "id": "entity_55556", "label": "Martin Hauk" },
+      "type": "has_officer",
+      "metadata": { "position": "CEO" }
+    },
+    {
+      "id": "rel_66667",
+      "source": { "id": "entity_66666", "label": "Rehau" },
+      "target": { "id": "entity_66667", "label": "Rehau Automotive" },
+      "type": "has_subsidiary",
+      "metadata": { "share": "100%" }
+    },
+    {
+      "id": "rel_66668",
+      "source": { "id": "entity_66666", "label": "Rehau" },
+      "target": { "id": "entity_66668", "label": "Rehau Building Solutions" },
+      "type": "has_subsidiary",
+      "metadata": { "share": "100%" }
+    },
+    {
+      "id": "rel_66669",
+      "source": { "id": "entity_66666", "label": "Rehau" },
+      "target": { "id": "entity_66669", "label": "Wagner Family" },
+      "type": "has_shareholder",
+      "metadata": { "share": "100%" }
+    },
+    {
+      "id": "rel_44445",
+      "source": { "id": "entity_44444", "label": "LyondellBasell" },
+      "target": { "id": "entity_44445", "label": "LyondellBasell Advanced Polymers" },
+      "type": "has_subsidiary",
+      "metadata": { "share": "100%" }
+    },
+    {
+      "id": "rel_44446",
+      "source": { "id": "entity_44444", "label": "LyondellBasell" },
+      "target": { "id": "entity_44446", "label": "Peter Vanacker" },
+      "type": "has_officer",
+      "metadata": { "position": "CEO" }
+    },
+    {
+      "id": "rel_supply1",
+      "source": { "id": "entity_33333", "label": "Fuyao Group" },
+      "target": { "id": "entity_54321", "label": "BOS" },
+      "type": "supplies",
+      "metadata": { "product": "Automotive glass" }
+    },
+    {
+      "id": "rel_supply2",
+      "source": { "id": "entity_44444", "label": "LyondellBasell" },
+      "target": { "id": "entity_22222", "label": "Flidr Plast" },
+      "type": "supplies",
+      "metadata": { "product": "Polymers" }
+    }
+  ],
+  "limit": 20,
+  "next": false,
+  "offset": 0,
+  "size": {
+    "count": 20,
+    "qualifier": "eq"
+  },
+  "relationships": [
+    {
+      "id": "rel_12345",
+      "from_id": "entity_12345",
+      "from_label": "Acme Corporation",
+      "from_type": "company",
+      "to_id": "entity_67890",
+      "to_label": "Acme International Ltd",
+      "to_type": "company",
+      "type": "has_subsidiary",
+      "attributes": {
+        "ownership_percentage": {
+          "data": [
+            {
+              "value": 100,
+              "currency": null,
+              "type": "ownership_percentage",
+              "label": "Ownership Percentage"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "start_date": {
+          "data": [
+            {
+              "value": "2015-03-22",
+              "type": "start_date",
+              "label": "Start Date"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "role": {
+          "data": [
+            {
+              "value": "Parent Company",
+              "type": "role",
+              "label": "Role"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "source": {
+          "data": [
+            {
+              "value": "Annual Report 2022",
+              "type": "source",
+              "label": "Source"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      },
+      "rev_attributes": {
+        "role": {
+          "data": [
+            {
+              "value": "Subsidiary",
+              "type": "role",
+              "label": "Role"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      }
+    },
+    {
+      "id": "rel_23456",
+      "from_id": "entity_12345",
+      "from_label": "Acme Corporation",
+      "from_type": "company",
+      "to_id": "entity_24680",
+      "to_label": "John Smith",
+      "to_type": "person",
+      "type": "has_officer",
+      "attributes": {
+        "role": {
+          "data": [
+            {
+              "value": "CEO",
+              "type": "role",
+              "label": "Role"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "start_date": {
+          "data": [
+            {
+              "value": "2018-01-15",
+              "type": "start_date",
+              "label": "Start Date"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "source": {
+          "data": [
+            {
+              "value": "Company Registry",
+              "type": "source",
+              "label": "Source"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      },
+      "rev_attributes": {
+        "role": {
+          "data": [
+            {
+              "value": "C-suite Executive",
+              "type": "role",
+              "label": "Role"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      }
+    },
+    {
+      "id": "rel_34567",
+      "from_id": "entity_67890",
+      "from_label": "Acme International Ltd",
+      "from_type": "company",
+      "to_id": "entity_24680",
+      "to_label": "John Smith",
+      "to_type": "person",
+      "type": "has_officer",
+      "attributes": {
+        "role": {
+          "data": [
+            {
+              "value": "Board Member",
+              "type": "role",
+              "label": "Role"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "start_date": {
+          "data": [
+            {
+              "value": "2018-02-20",
+              "type": "start_date",
+              "label": "Start Date"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "source": {
+          "data": [
+            {
+              "value": "UK Companies House",
+              "type": "source",
+              "label": "Source"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      },
+      "rev_attributes": {
+        "role": {
+          "data": [
+            {
+              "value": "Board Position",
+              "type": "role",
+              "label": "Role"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      }
+    },
+    {
+      "id": "rel_45678",
+      "from_id": "entity_11111",
+      "from_label": "MB Tool",
+      "from_type": "company",
+      "to_id": "entity_22222",
+      "to_label": "Flidr Plast",
+      "to_type": "company",
+      "type": "has_supplier",
+      "attributes": {
+        "relationship_type": {
+          "data": [
+            {
+              "value": "Key Supplier",
+              "type": "relationship_type",
+              "label": "Relationship Type"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "industry": {
+          "data": [
+            {
+              "value": "Automotive Components",
+              "type": "industry",
+              "label": "Industry"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "source": {
+          "data": [
+            {
+              "value": "Supplier Directory 2023",
+              "type": "source",
+              "label": "Source"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      },
+      "rev_attributes": {
+        "relationship_type": {
+          "data": [
+            {
+              "value": "Customer",
+              "type": "relationship_type",
+              "label": "Relationship Type"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      }
+    },
+    {
+      "id": "rel_56789",
+      "from_id": "entity_22222",
+      "from_label": "Flidr Plast",
+      "from_type": "company",
+      "to_id": "entity_33333",
+      "to_label": "Fuyao Group",
+      "to_type": "company",
+      "type": "supplies_to",
+      "attributes": {
+        "product_type": {
+          "data": [
+            {
+              "value": "Plastic Components",
+              "type": "product_type",
+              "label": "Product Type"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "start_date": {
+          "data": [
+            {
+              "value": "2020-05-10",
+              "type": "start_date",
+              "label": "Start Date"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "source": {
+          "data": [
+            {
+              "value": "Industry Database",
+              "type": "source",
+              "label": "Source"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "hs_codes": {
+          "data": [
+            {
+              "value": "3920.99",
+              "type": "hs_code",
+              "label": "HS Code"
+            },
+            {
+              "value": "8708.29",
+              "type": "hs_code",
+              "label": "HS Code"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 2,
+            "qualifier": "eq"
+          }
+        }
+      },
+      "rev_attributes": {
+        "relationship_type": {
+          "data": [
+            {
+              "value": "Buyer",
+              "type": "relationship_type",
+              "label": "Relationship Type"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      }
+    },
+    {
+      "id": "rel_67890",
+      "from_id": "entity_54321",
+      "from_label": "BOS",
+      "from_type": "company",
+      "to_id": "entity_33333",
+      "to_label": "Fuyao Group",
+      "to_type": "company",
+      "type": "has_supplier",
+      "attributes": {
+        "relationship_type": {
+          "data": [
+            {
+              "value": "Strategic Supplier",
+              "type": "relationship_type",
+              "label": "Relationship Type"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "industry": {
+          "data": [
+            {
+              "value": "Automotive Glass",
+              "type": "industry",
+              "label": "Industry"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "start_date": {
+          "data": [
+            {
+              "value": "2017-09-15",
+              "type": "start_date",
+              "label": "Start Date"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "source": {
+          "data": [
+            {
+              "value": "Corporate Press Release",
+              "type": "source",
+              "label": "Source"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "hs_codes": {
+          "data": [
+            {
+              "value": "7007.21",
+              "type": "hs_code",
+              "label": "HS Code"
+            },
+            {
+              "value": "7007.29",
+              "type": "hs_code",
+              "label": "HS Code"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 2,
+            "qualifier": "eq"
+          }
+        }
+      },
+      "rev_attributes": {
+        "relationship_type": {
+          "data": [
+            {
+              "value": "Customer",
+              "type": "relationship_type",
+              "label": "Relationship Type"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      }
+    },
+    {
+      "id": "rel_78901",
+      "from_id": "entity_44444",
+      "from_label": "LyondellBasell",
+      "from_type": "company",
+      "to_id": "entity_22222",
+      "to_label": "Flidr Plast",
+      "to_type": "company",
+      "type": "supplies_to",
+      "attributes": {
+        "product_type": {
+          "data": [
+            {
+              "value": "Plastic Raw Materials",
+              "type": "product_type",
+              "label": "Product Type"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "hs_codes": {
+          "data": [
+            {
+              "value": "3901.20",
+              "type": "hs_code",
+              "label": "HS Code"
+            },
+            {
+              "value": "3902.10",
+              "type": "hs_code",
+              "label": "HS Code"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 2,
+            "qualifier": "eq"
+          }
+        },
+        "source": {
+          "data": [
+            {
+              "value": "Customs Data",
+              "type": "source",
+              "label": "Source"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      },
+      "rev_attributes": {
+        "relationship_type": {
+          "data": [
+            {
+              "value": "Raw Material Provider",
+              "type": "relationship_type",
+              "label": "Relationship Type"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      }
+    },
+    {
+      "id": "rel_89012",
+      "from_id": "entity_22222",
+      "from_label": "Flidr Plast",
+      "from_type": "company",
+      "to_id": "entity_54321",
+      "to_label": "BOS",
+      "to_type": "company",
+      "type": "supplies_to",
+      "attributes": {
+        "product_type": {
+          "data": [
+            {
+              "value": "Automotive Interior Components",
+              "type": "product_type",
+              "label": "Product Type"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        },
+        "hs_codes": {
+          "data": [
+            {
+              "value": "3920.99",
+              "type": "hs_code",
+              "label": "HS Code"
+            },
+            {
+              "value": "9401.90",
+              "type": "hs_code",
+              "label": "HS Code"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 2,
+            "qualifier": "eq"
+          }
+        },
+        "source": {
+          "data": [
+            {
+              "value": "Company Website",
+              "type": "source",
+              "label": "Source"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      },
+      "rev_attributes": {
+        "relationship_type": {
+          "data": [
+            {
+              "value": "Tier 1 Supplier",
+              "type": "relationship_type",
+              "label": "Relationship Type"
+            }
+          ],
+          "limit": 5,
+          "size": {
+            "count": 1,
+            "qualifier": "eq"
+          }
+        }
+      }
+    }
+  ]
+}

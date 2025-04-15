@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+"""
+Testovací skript pro memory-agent API
+"""
+
+import json
+import requests
+import uuid
+
+# URL lokálního API serveru
+API_URL = "http://localhost:8123"
+
+def test_health():
+    """Zkontroluje zdraví API serveru."""
+    response = requests.get(f"{API_URL}/health")
+    print(f"Health check: {response.status_code}")
+    print(response.json())
+    return response.status_code == 200
+
+def test_chat():
+    """Otestuje endpoint /chat s jednoduchým dotazem."""
+    # Vytvoříme jedinečné user_id pro testování
+    user_id = str(uuid.uuid4())
+    
+    # Připravíme data pro požadavek
+    data = {
+        "messages": [
+            {
+                "role": "user",
+                "content": "Zapamatuj si, že se jmenuji Karel a mám rád programování v Pythonu."
+            }
+        ],
+        "user_id": user_id,
+        "model": "anthropic/claude-3-haiku@20240307",  # Použijeme menší model pro rychlejší odpověď
+        "temperature": 0.7
+    }
+    
+    # Pošleme požadavek na chat endpoint
+    print(f"\nPosílám chat požadavek s user_id: {user_id}")
+    response = requests.post(f"{API_URL}/chat", json=data)
+    
+    # Zpracujeme odpověď
+    if response.status_code == 200:
+        print(f"Chat požadavek úspěšný: {response.status_code}")
+        result = response.json()
+        
+        # Vytiskneme odpověď asistenta
+        assistant_message = next((msg for msg in result["messages"] if msg["role"] == "assistant"), None)
+        if assistant_message:
+            print("\nOdpověď asistenta:")
+            print(assistant_message["content"])
+        
+        # Zkontrolujeme, zda byly vytvořeny nějaké tool_calls pro ukládání paměti
+        tool_calls = next((msg["tool_calls"] for msg in result["messages"] if msg.get("tool_calls")), None)
+        if tool_calls:
+            print("\nTool calls:")
+            print(json.dumps(tool_calls, indent=2))
+        
+        # Zkusíme poslat druhý požadavek, abychom otestovali, zda se paměť uložila
+        second_data = {
+            "messages": [
+                {
+                    "role": "user",
+                    "content": "Jak se jmenuji a co mám rád?"
+                }
+            ],
+            "user_id": user_id,  # Použijeme stejné user_id pro kontinuitu
+            "model": "anthropic/claude-3-haiku@20240307",
+            "temperature": 0.7
+        }
+        
+        print("\nPosílám druhý chat požadavek pro ověření paměti...")
+        second_response = requests.post(f"{API_URL}/chat", json=second_data)
+        
+        if second_response.status_code == 200:
+            second_result = second_response.json()
+            second_message = next((msg for msg in second_result["messages"] if msg["role"] == "assistant"), None)
+            if second_message:
+                print("\nOdpověď na druhý požadavek:")
+                print(second_message["content"])
+            return True
+        else:
+            print(f"Druhý požadavek selhal: {second_response.status_code}")
+            print(second_response.text)
+            return False
+    else:
+        print(f"Chat požadavek selhal: {response.status_code}")
+        print(response.text)
+        return False
+
+if __name__ == "__main__":
+    print("Testování memory-agent API...")
+    
+    # Otestujeme health endpoint
+    if test_health():
+        print("\n✅ Health check úspěšný")
+    else:
+        print("\n❌ Health check selhal")
+        exit(1)
+    
+    # Otestujeme chat endpoint
+    if test_chat():
+        print("\n✅ Chat test úspěšný")
+    else:
+        print("\n❌ Chat test selhal")
+        exit(1)
+    
+    print("\nVšechny testy proběhly úspěšně!")

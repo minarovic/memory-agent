@@ -1,0 +1,11 @@
+version: '3'
+
+# Tento soubor pouze upravuje názvy služeb a kontejnerů,
+# aby mohly běžet paralelně s hlavním deploymentem.
+services:
+  langgraph-api:
+    container_name: memory-agent-dev-langgraph-api
+  langgraph-postgres:
+    container_name: memory-agent-dev-langgraph-postgres
+  langgraph-redis:
+    container_name: memory-agent-dev-langgraph-redis

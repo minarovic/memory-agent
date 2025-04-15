@@ -1,0 +1,553 @@
+{
+  "data": [
+    {
+      "id": "entity_54321",
+      "label": "BOS",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_54321",
+      "countries": ["DEU"],
+      "sanctioned": false,
+      "pep": false,
+      "num_documents": 42,
+      "degree": 13,
+      "closed": null,
+      "risk": {
+        "sanctioned": { "value": false, "level": "relevant" }
+      },
+      "risk_factors": {
+        "sanctioned": {
+          "value": false,
+          "metadata": {
+            "sources": ["OFAC", "EU Sanctions List"],
+            "last_update": ["2023-11-15"]
+          }
+        },
+        "pep": {
+          "value": false,
+          "metadata": {
+            "sources": ["Government Officials Database"]
+          }
+        },
+        "state_owned": {
+          "value": false,
+          "metadata": {
+            "sources": ["Corporate Registry"]
+          }
+        },
+        "export_controls": {
+          "value": true,
+          "metadata": {
+            "sources": ["BIS Entity List"],
+            "restriction_type": ["Dual-use items"],
+            "effective_date": ["2022-03-01"]
+          }
+        },
+        "forced_labor_xinjiang_geospatial": {
+          "value": false,
+          "metadata": {
+            "last_check": ["2023-08-10"]
+          }
+        }
+      },
+      "attributes": {
+        "name": {
+          "data": [
+            { "value": "BOS", "type": "primary" },
+            { "value": "BOS Automotive", "type": "alternative" }
+          ],
+          "limit": 10,
+          "size": { "count": 2, "qualifier": "eq" }
+        }
+      },
+      "relationship_count": {
+        "has_subsidiary": 5,
+        "has_officer": 8
+      },
+      "edge_counts": {
+        "has_subsidiary": {
+          "in": 0,
+          "out": 5,
+          "total": 5
+        },
+        "has_officer": {
+          "in": 0,
+          "out": 8,
+          "total": 8
+        }
+      }
+    },
+    {
+      "id": "entity_12345",
+      "label": "Acme Corporation",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_12345",
+      "countries": ["USA"],
+      "sanctioned": false,
+      "pep": false,
+      "num_documents": 78,
+      "degree": 5,
+      "closed": null,
+      "risk": {
+        "sanctioned": { "value": false, "level": "relevant" }
+      },
+      "risk_factors": {
+        "sanctioned": {
+          "value": false,
+          "metadata": {
+            "sources": ["OFAC", "EU Sanctions List"],
+            "last_update": ["2023-12-01"]
+          }
+        },
+        "pep": {
+          "value": false,
+          "metadata": {
+            "sources": ["Government Officials Database"]
+          }
+        },
+        "state_owned": {
+          "value": false,
+          "metadata": {
+            "sources": ["Corporate Registry"]
+          }
+        },
+        "export_controls": {
+          "value": false,
+          "metadata": {
+            "sources": ["BIS Entity List"]
+          }
+        }
+      },
+      "attributes": {
+        "name": {
+          "data": [
+            { "value": "Acme Corporation", "type": "primary" },
+            { "value": "ACME Corp.", "type": "alternative" }
+          ],
+          "limit": 10,
+          "size": { "count": 2, "qualifier": "eq" }
+        }
+      },
+      "relationship_count": {
+        "has_subsidiary": 1,
+        "has_officer": 1,
+        "has_shareholder": 2
+      },
+      "edge_counts": {
+        "has_subsidiary": {
+          "in": 0,
+          "out": 1,
+          "total": 1
+        },
+        "has_officer": {
+          "in": 0,
+          "out": 1,
+          "total": 1
+        },
+        "has_shareholder": {
+          "in": 0,
+          "out": 2,
+          "total": 2
+        },
+        "subsidiary_of": {
+          "in": 1,
+          "out": 0,
+          "total": 1
+        }
+      }
+    },
+    {
+      "id": "entity_67890",
+      "label": "Acme International Ltd",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_67890",
+      "countries": ["GBR", "USA"],
+      "sanctioned": true,
+      "pep": false,
+      "num_documents": 54,
+      "degree": 7,
+      "closed": null,
+      "risk": {
+        "sanctioned": { "value": true, "level": "critical" },
+        "forced_labor": { "value": true, "level": "high" }
+      },
+      "risk_factors": {
+        "sanctioned": {
+          "value": true,
+          "metadata": {
+            "sources": ["OFAC", "EU Sanctions List"],
+            "last_update": ["2023-06-15"],
+            "reason": ["Military activities"],
+            "program": ["Executive Order 14024"]
+          }
+        },
+        "pep": {
+          "value": false,
+          "metadata": {
+            "sources": ["Government Officials Database"]
+          }
+        },
+        "forced_labor_xinjiang_geospatial": {
+          "value": true,
+          "metadata": {
+            "last_check": ["2023-03-18"],
+            "evidence": ["Supplier connections with high-risk entities"]
+          }
+        },
+        "export_controls": {
+          "value": true,
+          "metadata": {
+            "sources": ["BIS Entity List"],
+            "restriction_type": ["Military end-use"],
+            "effective_date": ["2022-05-12"]
+          }
+        }
+      },
+      "attributes": {
+        "name": {
+          "data": [
+            { "value": "Acme International Ltd", "type": "primary" },
+            { "value": "Acme Int'l", "type": "alternative" }
+          ],
+          "limit": 10,
+          "size": { "count": 2, "qualifier": "eq" }
+        }
+      },
+      "relationship_count": {
+        "subsidiary_of": 1,
+        "has_officer": 2
+      },
+      "edge_counts": {
+        "subsidiary_of": {
+          "in": 1,
+          "out": 0,
+          "total": 1
+        },
+        "has_officer": {
+          "in": 0,
+          "out": 2,
+          "total": 2
+        },
+        "has_shareholder": {
+          "in": 0,
+          "out": 4,
+          "total": 4
+        }
+      }
+    },
+    {
+      "id": "entity_13579",
+      "label": "Acme Supplies Co",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_13579",
+      "countries": ["CHN"],
+      "sanctioned": false,
+      "pep": true,
+      "risk": {
+        "sanctioned": { "value": false, "level": "relevant" },
+        "pep": { "value": true, "level": "elevated" }
+      }
+    },
+    {
+      "id": "entity_24680",
+      "label": "John Smith",
+      "type": "person",
+      "entity_url": "https://sayari.com/entity/entity_24680",
+      "countries": ["USA"],
+      "sanctioned": false,
+      "pep": true,
+      "risk": {
+        "pep": { "value": true, "level": "elevated" }
+      }
+    },
+    {
+      "id": "entity_97531",
+      "label": "Acme Automotive Parts",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_97531",
+      "countries": ["DEU", "CZE"],
+      "sanctioned": false,
+      "pep": false,
+      "risk": {
+        "sanctioned": { "value": false, "level": "relevant" }
+      }
+    },
+    {
+      "id": "entity_11111",
+      "label": "MB Tool",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_11111",
+      "countries": ["CZE"],
+      "sanctioned": false,
+      "pep": false,
+      "num_documents": 31,
+      "degree": 7,
+      "closed": null,
+      "risk": {
+        "sanctioned": { "value": false, "level": "relevant" }
+      },
+      "risk_factors": {
+        "sanctioned": {
+          "value": false,
+          "metadata": {
+            "sources": ["OFAC", "EU Sanctions List"],
+            "last_update": ["2023-11-20"]
+          }
+        },
+        "pep": {
+          "value": false,
+          "metadata": {
+            "sources": ["Government Officials Database"]
+          }
+        },
+        "state_owned": {
+          "value": false,
+          "metadata": {
+            "sources": ["Corporate Registry"]
+          }
+        },
+        "export_controls": {
+          "value": false,
+          "metadata": {
+            "sources": ["BIS Entity List"]
+          }
+        },
+        "forced_labor_xinjiang_geospatial": {
+          "value": false,
+          "metadata": {
+            "last_check": ["2023-09-02"]
+          }
+        }
+      },
+      "attributes": {
+        "name": {
+          "data": [
+            { "value": "MB Tool", "type": "primary" },
+            { "value": "MB Tool s.r.o.", "type": "alternative" }
+          ],
+          "limit": 10,
+          "size": { "count": 2, "qualifier": "eq" }
+        }
+      },
+      "relationship_count": {
+        "has_subsidiary": 0,
+        "has_officer": 3
+      },
+      "edge_counts": {
+        "has_officer": {
+          "in": 0,
+          "out": 3,
+          "total": 3
+        },
+        "has_supplier": {
+          "in": 0,
+          "out": 4,
+          "total": 4
+        }
+      }
+    },
+    {
+      "id": "entity_22222",
+      "label": "Flidr Plast",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_22222",
+      "countries": ["CZE"],
+      "sanctioned": false,
+      "pep": false,
+      "num_documents": 28,
+      "degree": 9,
+      "closed": null,
+      "risk": {
+        "sanctioned": { "value": false, "level": "relevant" }
+      },
+      "risk_factors": {
+        "sanctioned": {
+          "value": false,
+          "metadata": {
+            "sources": ["OFAC", "EU Sanctions List"],
+            "last_update": ["2023-11-15"]
+          }
+        },
+        "pep": {
+          "value": false,
+          "metadata": {
+            "sources": ["Government Officials Database"]
+          }
+        },
+        "state_owned": {
+          "value": false,
+          "metadata": {
+            "sources": ["Corporate Registry"]
+          }
+        },
+        "export_controls": {
+          "value": false,
+          "metadata": {
+            "sources": ["BIS Entity List"]
+          }
+        }
+      },
+      "attributes": {
+        "name": {
+          "data": [
+            { "value": "Flidr Plast", "type": "primary" },
+            { "value": "Flidr s.r.o.", "type": "alternative" }
+          ],
+          "limit": 10,
+          "size": { "count": 2, "qualifier": "eq" }
+        }
+      },
+      "relationship_count": {
+        "has_subsidiary": 2,
+        "has_officer": 4
+      },
+      "edge_counts": {
+        "has_subsidiary": {
+          "in": 0,
+          "out": 2,
+          "total": 2
+        },
+        "has_officer": {
+          "in": 0,
+          "out": 4,
+          "total": 4
+        },
+        "supplies_to": {
+          "in": 0,
+          "out": 3,
+          "total": 3
+        }
+      }
+    },
+    {
+      "id": "entity_33333",
+      "label": "Fuyao Group",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_33333",
+      "countries": ["CHN"],
+      "sanctioned": false,
+      "pep": true,
+      "num_documents": 87,
+      "degree": 19,
+      "closed": null,
+      "risk": {
+        "pep": { "value": true, "level": "elevated" }
+      },
+      "risk_factors": {
+        "sanctioned": {
+          "value": false,
+          "metadata": {
+            "sources": ["OFAC", "EU Sanctions List"],
+            "last_update": ["2023-10-05"]
+          }
+        },
+        "pep": {
+          "value": true,
+          "metadata": {
+            "sources": ["Government Officials Database"],
+            "position": ["Board Member with government connections"],
+            "country": ["CHN"]
+          }
+        },
+        "state_owned": {
+          "value": true,
+          "metadata": {
+            "sources": ["Corporate Registry"],
+            "ownership_percentage": ["35%"],
+            "controlling_entity": ["Chinese government"]
+          }
+        },
+        "export_controls": {
+          "value": true,
+          "metadata": {
+            "sources": ["BIS Entity List"],
+            "restriction_type": ["Surveillance technology"],
+            "effective_date": ["2022-01-10"]
+          }
+        },
+        "forced_labor_xinjiang_geospatial": {
+          "value": true,
+          "metadata": {
+            "last_check": ["2023-02-18"],
+            "evidence": ["Production facilities in high-risk region"]
+          }
+        }
+      },
+      "attributes": {
+        "name": {
+          "data": [
+            { "value": "Fuyao Group", "type": "primary" },
+            { "value": "福耀集团", "type": "alternative" }
+          ],
+          "limit": 10,
+          "size": { "count": 2, "qualifier": "eq" }
+        }
+      },
+      "relationship_count": {
+        "has_subsidiary": 7,
+        "has_officer": 5
+      },
+      "edge_counts": {
+        "has_subsidiary": {
+          "in": 0,
+          "out": 7,
+          "total": 7
+        },
+        "has_officer": {
+          "in": 0,
+          "out": 5,
+          "total": 5
+        },
+        "has_supplier": {
+          "in": 0,
+          "out": 7,
+          "total": 7
+        }
+      }
+    },
+    {
+      "id": "entity_44444",
+      "label": "LyondellBasell",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_44444",
+      "countries": ["NLD", "USA"],
+      "sanctioned": false,
+      "pep": false,
+      "risk": {
+        "sanctioned": { "value": false, "level": "relevant" },
+        "environmental": { "value": true, "level": "elevated" }
+      }
+    },
+    {
+      "id": "entity_55555",
+      "label": "Hauk",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_55555",
+      "countries": ["CZE"],
+      "sanctioned": false,
+      "pep": false,
+      "risk": {
+        "sanctioned": { "value": false, "level": "relevant" }
+      }
+    },
+    {
+      "id": "entity_66666",
+      "label": "Rehau",
+      "type": "company",
+      "entity_url": "https://sayari.com/entity/entity_66666",
+      "countries": ["DEU"],
+      "sanctioned": false,
+      "pep": false,
+      "risk": {
+        "sanctioned": { "value": false, "level": "relevant" }
+      }
+    }
+  ],
+  "limit": 10,
+  "offset": 0,
+  "next": false,
+  "size": {
+    "count": 12,
+    "qualifier": "eq"
+  },
+  "total": 6
+}

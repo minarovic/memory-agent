@@ -1,0 +1,980 @@
+{
+  "name": "Data sources combination",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "tier11"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        -2140,
+        3100
+      ],
+      "id": "ae5d035e-3657-41f3-9c37-c726fdc060dd",
+      "name": "supabase_tier11",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f6WPuYMBK2YiPvJ9",
+          "name": "Supabase account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "hs_kody"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        -2020,
+        3100
+      ],
+      "id": "fc67ff74-5891-42cf-9300-024852d58cc3",
+      "name": "supabase_hs_kody",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f6WPuYMBK2YiPvJ9",
+          "name": "Supabase account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.chatInput }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -2300,
+        2880
+      ],
+      "id": "252333e1-cf48-4846-b91f-209a72c4a7d2",
+      "name": "AI Agent2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "anthropic/claude-3.7-sonnet:thinking",
+          "mode": "list",
+          "cachedResultName": "anthropic/claude-3.7-sonnet:thinking"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2380,
+        3100
+      ],
+      "id": "500cef72-f454-4b95-a36d-ae3b5509ad06",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "wEsQkU6xSUhbJmZU",
+          "name": "OpenAi account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "103d4f27-72fa-44fc-897d-7e4f272d09a1",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2400,
+        840
+      ],
+      "id": "c381054d-7bb9-490e-bae0-a05593b964e4",
+      "name": "Webhook",
+      "webhookId": "103d4f27-72fa-44fc-897d-7e4f272d09a1"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1840,
+        740
+      ],
+      "id": "a6adfb95-e4ba-438d-96c4-df5e2ace6ff3",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "test_session_123",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.4,
+      "position": [
+        -2260,
+        3100
+      ],
+      "id": "cc5e22a9-3223-414c-88af-e352950bb9b0",
+      "name": "Redis Chat Memory",
+      "credentials": {
+        "redis": {
+          "id": "WZmvICQ2M534BrWg",
+          "name": "Redis account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze the user's input to extract company name and analysis type.\n\nThe format should follow the pattern: \"Company Name; analysis_type\"\nWhere analysis_type can be:\n- risk_comparison (for risk analysis)\n- common_suppliers (for supplier relationships)\n\nExamples:\n- Input: \"Find risks for Apple Inc\"\n  Output: \"Apple Inc; risk_comparison\"\n  \n- Input: \"Show me suppliers for Samsung Electronics\"\n  Output: \"Samsung Electronics; common_suppliers\"\n  \n- Input: \"I need information about Microsoft\"\n  Output: \"Microsoft; risk_comparison\"\n\nInput: {{ $json.original_data.body.chatInput }}\n\nOnly respond with the structured output in the format \"Company Name; analysis_type\" - no other text.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1940,
+        840
+      ],
+      "id": "b2ba34e8-0bab-41af-bbf2-d43097e1cfd6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "url": "=https://zyjgjpdwpdgfrpilxvvg.supabase.co/functions/v1/sayari-simulator/search/entity?q={{ $json.company }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1260,
+        920
+      ],
+      "id": "7e89192f-b751-4796-ae19-7e8fb325ed28",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "=https://zyjgjpdwpdgfrpilxvvg.supabase.co/functions/v1/get-supplier-data?name={{ $json.companies }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        40,
+        580
+      ],
+      "id": "6c6f64be-bb71-47de-8c60-a52f5045b5bc",
+      "name": "HTTP Request int"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        480,
+        730
+      ],
+      "id": "bfcc9499-1efd-4eb6-88b4-aa3f016efc80",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3f0a62bf-ccc2-44c4-b981-aee56239c2fb",
+              "leftValue": "={{!!$json.has_entity}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -400,
+        1005
+      ],
+      "id": "c77111a0-7f42-45c8-a769-33da0406b894",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "=https://zyjgjpdwpdgfrpilxvvg.supabase.co/functions/v1/sayari-simulator/entity/{{$json.entity_id}}/relationships",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -180,
+        880
+      ],
+      "id": "97617b2c-01c1-4ded-aabb-8c362c45541f",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        260,
+        880
+      ],
+      "id": "f6250d49-86c9-490a-aeaa-65e83e5afb82",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-7-sonnet-20250219",
+          "mode": "list",
+          "cachedResultName": "Claude 3.7 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1080,
+        900
+      ],
+      "id": "c279b041-effd-4a2e-8585-f65cf48c11b2",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "S0l6ayEUvipNEBvj",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Získání vstupu z AI Agent (který vrací data v poli output)\nconst input = $input.first().json.output || $input.first().json.body?.chatInput || \"\";\n\n// Přidáme diagnostický log\nconsole.log(\"Vstupní data:\", JSON.stringify($input.first().json));\nconsole.log(\"Extrahovaný vstup:\", input);\n\n// Přidáme extrakci z query parametru, pokud body.chatInput není k dispozici\nconst effectiveInput = input || $input.first().json?.query || \"\";\n\n// Formát: \"MB Tool; risk_comparison\"\nlet companies = [];\nlet analysis_type = 'general';\n\n// Zpracování vstupu s oddělovačem\nconst parts = effectiveInput.split(';');\n\nif (parts.length >= 1) {\n  companies = parts[0].split(',').map(c => c.trim()).filter(c => c.length > 0);\n}\n\nif (parts.length >= 2) {\n  analysis_type = parts[1].trim().toLowerCase();\n}\n\n// Ověření validního typu analýzy\nif (!['risk_comparison', 'common_suppliers', 'general'].includes(analysis_type)) {\n  analysis_type = 'general';\n}\n\n// Log výsledných dat\nconsole.log(\"Extrahované společnosti:\", companies);\nconsole.log(\"Extrahovaný typ analýzy:\", analysis_type);\n\nreturn {\n  json: {\n    companies: companies,\n    company_count: companies.length,\n    analysis_type: analysis_type,\n    query: effectiveInput,\n    company: companies[0] || \"\" // Přidáno pro kompatibilitu\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1500,
+        840
+      ],
+      "id": "768ccb9f-2955-4b28-9330-09d6add1e46f",
+      "name": "parse_user_query"
+    },
+    {
+      "parameters": {
+        "jsCode": "// combine_data_objects - oprava detekce vztahových dat\ntry {\n  // Získáme všechny vstupní položky\n  const inputs = $input.all();\n  \n  // Proměnné pro uložení nalezených dat\n  let internalData = null;\n  let externalData = null;\n  let relationshipsData = null; \n  let analysisType = null;\n  let company = \"\";\n  \n  // Nejprve získáme typ analýzy z parse_user_query, pokud je k dispozici\n  const userQuery = $('parse_user_query').first()?.json;\n  if (userQuery && userQuery.analysis_type) {\n    analysisType = userQuery.analysis_type;\n  }\n  \n  // Projdeme všechny vstupy a identifikujeme je podle struktury\n  inputs.forEach(input => {\n    const data = input.json;\n    \n    // Extrakce jména společnosti - bere první nenulovou hodnotu\n    if (data.company && data.company !== \"\") {\n      company = data.company;\n    }\n    \n    // Identifikace interních dat\n    if (data.company_profile || data.tool === \"tool_parse_internal_data\") {\n      internalData = data.company_profile || {};\n    }\n    \n    // Identifikace externích dat\n    if (data.external_data || data.tool === \"tool_parse_external_data\") {\n      externalData = data;\n      \n      // Typ analýzy bereme z externalData pouze pokud ještě není nastaven\n      if (!analysisType && data.analysis_type) {\n        analysisType = data.analysis_type;\n      }\n    }\n    \n    // OPRAVENO: Identifikace vztahových dat podle správných properties\n    if (data.relationship_analysis || data.tool === \"tool_parse_relationships\" || \n        data.relationships || data.visualization_data) {\n      relationshipsData = data;\n    }\n  });\n  \n  // Nastavení výchozího typu analýzy, pokud nebyl nalezen\n  if (!analysisType) {\n    analysisType = \"risk_comparison\";\n  }\n  \n  // Sestavení výsledného objektu s typem analýzy a všemi potřebnými daty\n  return {\n    json: {\n      company: company,\n      companies: [company], // Pro budoucí rozšíření na více společností\n      analysis_type: analysisType,\n      external_data: externalData?.external_data || {},\n      risk_analysis: externalData?.risk_analysis || {},\n      internal_data: internalData || {},\n      // OPRAVENO: Správné předání struktury pro relationships\n      relationships: {\n        // Explicitně nastavujeme has_relationships na true, pokud máme data\n        has_relationships: !!relationshipsData,\n        // Prioritní použití správných properties\n        data: relationshipsData?.relationship_analysis || \n              relationshipsData?.relationships?.data || \n              {},\n        // Správné předání vizualizačních dat\n        visualization: relationshipsData?.visualization_data || \n                       relationshipsData?.relationships?.visualization || \n                       {nodes: [], links: []}\n      }\n    }\n  };\n} catch (error) {\n  // V případě chyby vrátíme všechny vstupy nezměněné\n  return $input.all();\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        730
+      ],
+      "id": "b0f48d11-8d29-416f-b15c-b731f69c0ffd",
+      "name": "combine_data_objects"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.generatedPrompt }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1240,
+        740
+      ],
+      "id": "88fb3650-43f4-467b-bd0a-4f9ec9ecea44",
+      "name": "Supervisor"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Získání typu analýzy z Code1\nconst analysisType = $('prepare_external_data').first().json.analysis_type || \"risk_comparison\";\n\nreturn {\n  json: {\n    has_relationships: false,\n    analysis_type: analysisType,  // Předání typu analýzy\n    relationships: [],\n    visualization: {\n      nodes: [],\n      links: []\n    }\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        40,
+        1080
+      ],
+      "id": "e14d0ce2-cc3c-4be8-bea0-ff4aa7ed7d7a",
+      "name": "prepare_empty_relationships_data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// generate_supervisor_prompt - zajištění správné volby nástrojů podle typu analýzy\ntry {\n  // Získáme údaje o analýze a společnostech\n  const data = $input.first().json;\n  const analysisType = data.analysis_type || \"general\";\n  \n  // Extrakce jména společnosti\n  const company = data.company || \"\";\n  const companyText = company ? `company ${company}` : \"specified company\";\n  \n  // Vytvoření základního promptu pro Supervisora\n  let supervisorPrompt = `You are a company analysis assistant specialized in risk assessment and supplier analysis.\n\nYou have access to the following tools:\n\n- analyze_external_risks: Analyze external risk factors and compliance data for the company.\n- analyze_internal_data: Analyze internal company data including tier classification, HS codes, and business activities.\n- analyze_relationships: Analyze relationships between entities, identifying business networks and supply chains.\n\n`;\n\n  // Přizpůsobení promptu podle typu analýzy\n  if (analysisType === \"risk_comparison\") {\n    supervisorPrompt += `You are analyzing risk factors for ${companyText}.\n\nBased on the analysis type (risk_comparison), use analyze_external_risks and analyze_internal_data to provide a comprehensive risk assessment and compliance analysis. Include analysis of HS codes and their regulatory implications.`;\n  } else if (analysisType === \"common_suppliers\") {\n    supervisorPrompt += `You are analyzing supplier relationships for ${companyText}.\n\nBased on the analysis type (common_suppliers), use analyze_relationships to identify key suppliers, supply chain connections, and any related risks. You should also use analyze_internal_data to understand the company's business activities and product categories.`;\n  } else {\n    supervisorPrompt += `You are performing a general analysis of ${companyText}.\n\nBased on the available data, use any combination of tools to provide the most relevant and comprehensive analysis, including risk factors, internal company data, and business relationships.`;\n  }\n\n  supervisorPrompt += `\n\nPresent your findings in a clear, structured format with appropriate headings and bullet points where relevant. Include summary insights at the beginning of your response.`;\n\n  // Vrátíme prompt jako výstup\n  return {\n    json: {\n      generatedPrompt: supervisorPrompt\n    }\n  };\n} catch (error) {\n  // V případě chyby vrátíme základní prompt\n  return {\n    json: {\n      generatedPrompt: \"You are a company analysis assistant. Please analyze the provided company data.\"\n    }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        740
+      ],
+      "id": "c5120585-075e-4da0-85ae-8f0524832908",
+      "name": "generate_supervisor_prompt"
+    },
+    {
+      "parameters": {
+        "name": "analyze_external_risks",
+        "description": "Analyzes external risk factors and compliance data for the company.",
+        "jsCode": "// analyze_external_risks\ntry {\n  // První pokus získat data z inputData (explicitně předaná)\n  const inputData = $input.first().json || {};\n  \n  // Druhý pokus - získat data z rootScope (globální kontext)\n  const rootData = $('combine_data_objects').first().json || {};\n  \n  // Kombinace dat\n  const company = inputData.company || rootData.company || \"Unknown Company\";\n  \n  // Přidání diagnostických informací\n  console.log(\"Input data:\", JSON.stringify(inputData));\n  console.log(\"Root data:\", JSON.stringify(rootData));\n  console.log(\"Using company name:\", company);\n  \n  // Extract risk data\n  const externalData = rootData.external_data || inputData.external_data || {};\n  const riskAnalysis = rootData.risk_analysis || {};\n  \n  // Create a formatted analysis as a string\n  const formattedAnalysis = `\n## External Risk Analysis for ${company}\n\n### Sanctions Status\n${riskAnalysis.sanctions_status || \"No sanctions information available\"}\n\n### PEP Connections\n${Array.isArray(riskAnalysis.pep_connections) && riskAnalysis.pep_connections.length > 0 \n  ? riskAnalysis.pep_connections.join(\", \") \n  : \"No PEP connections identified\"}\n\n### Risk Score\n${riskAnalysis.risk_score || \"0\"}/100\n\n### Risk Factors\n${Array.isArray(riskAnalysis.risk_factors) && riskAnalysis.risk_factors.length > 0 \n  ? riskAnalysis.risk_factors.join(\", \") \n  : \"No specific risk factors identified\"}\n`;\n\n  // Přímý návrat textu pro AI Tool\n  return formattedAnalysis;\n} catch (error) {\n  console.log(\"Error in analyze_external_risks:\", error);\n  return \"Error occurred during external risk analysis: \" + error.message;\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        1160
+      ],
+      "id": "9891d86d-1fb0-4386-9b4a-ab5917fd999c",
+      "name": "analyze_external_risks"
+    },
+    {
+      "parameters": {
+        "name": "analyze_relationships",
+        "description": "Analyzes relationships between entities, identifying business networks and supply chains.",
+        "jsCode": "// analyze_relationships\ntry {\n  // První pokus získat data z inputData (explicitně předaná)\n  const inputData = $input.first().json || {};\n  \n  // Druhý pokus - získat data z rootScope (globální kontext)\n  const rootData = $('combine_data_objects').first().json || {};\n  \n  // Kombinace dat\n  const company = inputData.company || rootData.company || \"Unknown Company\";\n  \n  // Přidání diagnostických informací\n  console.log(\"Input data:\", JSON.stringify(inputData));\n  console.log(\"Root data:\", JSON.stringify(rootData));\n  console.log(\"Using company name:\", company);\n  \n  // Extract relationship data\n  const relationships = rootData.relationships || inputData.relationships || {};\n  const relationshipData = relationships.data || {};\n  \n  // Vytvoření vzorových dat pro ukázku, když data chybí\n  const suppliers = Array.isArray(relationshipData.suppliers) \n    ? relationshipData.suppliers \n    : [\"Supplier A\", \"Supplier B\", \"Supplier C\"];\n    \n  const customers = Array.isArray(relationshipData.customers) \n    ? relationshipData.customers \n    : [\"Customer X\", \"Customer Y\"];\n    \n  const ownership = Array.isArray(relationshipData.ownership) \n    ? relationshipData.ownership \n    : [];\n    \n  const keyRelationships = Array.isArray(relationshipData.key_relationships) \n    ? relationshipData.key_relationships \n    : [];\n  \n  // Create a formatted analysis as a string\n  const formattedAnalysis = `\n## Relationship Analysis for ${company}\n\n### Key Suppliers\n${Array.isArray(suppliers) && suppliers.length > 0 \n  ? suppliers.join(\", \") \n  : \"No suppliers identified\"}\n\n### Key Customers\n${Array.isArray(customers) && customers.length > 0 \n  ? customers.join(\", \") \n  : \"No customers identified\"}\n\n${ownership.length > 0 ? `\n### Ownership Structure\n${ownership.join(\", \")}\n` : ''}\n\n${keyRelationships.length > 0 ? `\n### Key Business Relationships\n${keyRelationships.join(\", \")}\n` : ''}\n\n### Summary\n${company} has ${suppliers.length} key suppliers and ${customers.length} major customers.\n`;\n\n  // Přímý návrat textu pro AI Tool\n  return formattedAnalysis;\n} catch (error) {\n  console.log(\"Error in analyze_relationships:\", error);\n  return \"Error occurred during relationship analysis: \" + error.message;\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.1,
+      "position": [
+        1300,
+        1160
+      ],
+      "id": "f0362d88-1d86-4c16-a978-85e8ab3b4f8b",
+      "name": "analyze_relationships"
+    },
+    {
+      "parameters": {
+        "jsCode": "// prepare_external_data\nconst inputData = $input.first().json;\n\n// Správná extrakce názvu společnosti z dat Sayari API\nconst company = inputData.data?.label || inputData.company_name || inputData.companies?.[0] || \"\";\n\n// Vytvoření externí_data se správnou strukturou\nconst external_data = {\n  has_results: !!inputData.data,\n  // Inicializace entities s daty ze správného místa\n  entities: inputData.data ? [\n    {\n      id: inputData.data.id,\n      name: inputData.data.label || company,\n      type: inputData.data.type || \"Company\",\n      risk_score: \"0\"  // V ukázkových datech není risk score\n    }\n  ] : []\n};\n\n// Zpracování externích rizikových dat\nreturn {\n  json: {\n    tool: \"tool_parse_external_data\",\n    company: company,  // Předání správně extrahovaného názvu společnosti\n    analysis_type: inputData.analysis_type || \"risk_comparison\",\n    external_data: external_data,\n    risk_analysis: {\n      sanctions_status: \"Žádné aktivní sankce nenalezeny\",\n      pep_connections: [],\n      compliance_issues: [],\n      risk_score: \"0\",\n      risk_factors: inputData.data?.risk_factors ? Object.keys(inputData.data.risk_factors) : []\n    },\n    risk_summary: `Analýza rizikových faktorů pro společnost ${company} ukazuje celkové skóre rizika 0/100.`\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -840,
+        940
+      ],
+      "id": "6bd9a951-a59a-4e02-80a0-7a1fbe0fef34",
+      "name": "prepare_external_data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// tool_parse_internal_data\nconst inputData = $input.first().json;\n\n// Extrakce jména společnosti ze supplier_info (opraveno)\nconst company = inputData.supplier_info?.supplier_name || inputData.companies?.[0] || \"\";\n\n// Extrakce dat ze supplier_info\nlet tier_classification = \"Neurčeno\";\nlet hs_codes = [];\nlet business_activities = [];\n\nif (inputData.supplier_info) {\n  // Získání tier klasifikace\n  tier_classification = inputData.supplier_info.primary_tier || \"Neurčeno\";\n  \n  // Extrakce HS kódů\n  hs_codes = inputData.supplier_info.hs_code_matches?.map(match => match.hsCode) || [];\n  \n  // Extrakce obchodních aktivit\n  business_activities = inputData.supplier_info.identified_activities?.map(activity => activity.activity) || [];\n}\n\n// Zpracování interních dat\nreturn {\n  json: {\n    tool: \"tool_parse_internal_data\",\n    company: company,  // Přenos správného jména společnosti\n    company_profile: {\n      tier_classification: tier_classification,\n      hs_codes: hs_codes,\n      business_activities: business_activities,\n      geographic_presence: []\n    },\n    profile_summary: `Společnost ${company} je klasifikována jako ${tier_classification} dodavatel s ${business_activities.length} identifikovanými obchodními aktivitami.`\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        580
+      ],
+      "id": "9d0c1ea6-0c1c-451d-9fe3-9004bda0f09f",
+      "name": "prepare_internal_data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// tool_parse_relationships - pro Sayari API data\n  const companies = $input.first().json.companies || [];\n  const mainCompany = companies[0] || \"Unknown Company\";\n\n  // Získání dat z různých možných struktur\n  const inputData = $input.first().json;\n\n  // Extrakce vztahů z různých možných struktur\n  let relationshipsList = [];\n\n  // Pokud máme strukturu s data.relationships\n  if (inputData.data && Array.isArray(inputData.data.relationships)) {\n    relationshipsList = inputData.data.relationships;\n  }\n  // Pokud máme strukturu s relationships polem přímo\n  else if (Array.isArray(inputData.relationships)) {\n    relationshipsList = inputData.relationships;\n  }\n  // Pokud máme strukturu, kterou jste právě sdílel\n  else if (typeof inputData.relationships === 'object' && Array.isArray(inputData.relationships)) {\n    relationshipsList = inputData.relationships;\n  }\n  // Pokud máme jednoduchou strukturu s relationships atributem\n  else if (typeof inputData.total === 'number' && Array.isArray(inputData.relationships)) {\n    relationshipsList = inputData.relationships;\n  }\n\n  // Pomocné funkce pro generování ID a mapování typů\n  function generateNodeId(entityId, fallback) {\n    return entityId || `node_${fallback.replace(/\\s+/g, '_').toLowerCase()}`;\n  }\n\n  function mapRelationshipTypeToColor(type) {\n    const typeMap = {\n      'has_subsidiary': '#3366CC',\n      'subsidiary_of': '#3366CC',\n      'has_officer': '#33AA33',\n      'officer_of': '#33AA33',\n      'has_shareholder': '#CC6633',\n      'shareholder_of': '#CC6633',\n      'has_supplier': '#9900CC',\n      'supplies_to': '#9900CC',\n      'supplies': '#9900CC'\n    };\n    return typeMap[type] || '#AAAAAA';\n  }\n\n  function mapEntityTypeToShape(type) {\n    const typeMap = {\n      'company': 'circle',\n      'person': 'triangleUp',\n      'organization': 'square'\n    };\n    return typeMap[type] || 'circle';\n  }\n\n  // Inicializace uzlů a hran\n  const nodes = new Map();\n  const links = [];\n\n  // Přidání hlavního uzlu (analyzovaná společnost)\n  const mainNodeId = generateNodeId('main_entity', mainCompany);\n  nodes.set(mainNodeId, {\n    id: mainNodeId,\n    label: mainCompany,\n    data: {\n      type: 'company',\n      isMain: true,\n      shape: 'circle',\n      color: '#FF6600'  // Výrazná barva pro hlavní entitu\n    }\n  });\n\n  // Zpracování vztahů ze získaného seznamu\n  if (relationshipsList.length > 0) {\n    relationshipsList.forEach((relationship) => {\n      const sourceId = relationship.source?.id || relationship.from_id || generateNodeId(null, relationship.source?.label ||\n  relationship.from_label || 'source');\n      const targetId = relationship.target?.id || relationship.to_id || generateNodeId(null, relationship.target?.label ||\n  relationship.to_label || 'target');\n      const sourceLabel = relationship.source?.label || relationship.from_label || 'Unknown Source';\n      const targetLabel = relationship.target?.label || relationship.to_label || 'Unknown Target';\n      const sourceType = relationship.source?.type || relationship.from_type || 'company';\n      const targetType = relationship.target?.type || relationship.to_type || 'company';\n      const relationType = relationship.type;\n\n      // Přidání zdrojového uzlu, pokud ještě neexistuje\n      if (!nodes.has(sourceId)) {\n        nodes.set(sourceId, {\n          id: sourceId,\n          label: sourceLabel,\n          data: {\n            type: sourceType,\n            isMain: sourceId === mainNodeId,\n            shape: mapEntityTypeToShape(sourceType),\n            color: '#5599FF'\n          }\n        });\n      }\n\n      // Přidání cílového uzlu, pokud ještě neexistuje\n      if (!nodes.has(targetId)) {\n        nodes.set(targetId, {\n          id: targetId,\n          label: targetLabel,\n          data: {\n            type: targetType,\n            isMain: targetId === mainNodeId,\n            shape: mapEntityTypeToShape(targetType),\n            color: '#5599FF'\n          }\n        });\n      }\n\n      // Přidání hrany mezi uzly\n      links.push({\n        id: relationship.id || `edge_${sourceId}_${targetId}`,\n        source: sourceId,\n        target: targetId,\n        label: relationType,\n        data: {\n          type: relationType,\n          color: mapRelationshipTypeToColor(relationType),\n          // Extrakce metadat z různých možných míst\n          metadata: relationship.metadata || relationship.attributes || {}\n        }\n      });\n    });\n  }\n  // Alternativní zpracování dat ze struktury s dodavateli, zákazníky, atd.\n  else if (inputData.suppliers || inputData.customers || inputData.data?.suppliers || inputData.data?.customers) {\n    // Získání seznamů dodavatelů a zákazníků z možných míst\n    const suppliers = inputData.suppliers || inputData.data?.suppliers || [];\n    const customers = inputData.customers || inputData.data?.customers || [];\n\n    // Zpracování dodavatelů\n    suppliers.forEach((supplier, index) => {\n      const supplierId = generateNodeId(null, `supplier_${index}`);\n      const supplierName = typeof supplier === 'string' ? supplier : supplier.name || `Supplier ${index + 1}`;\n\n      nodes.set(supplierId, {\n        id: supplierId,\n        label: supplierName,\n        data: {\n          type: 'company',\n          subType: 'supplier',\n          shape: 'circle',\n          color: '#3366CC'\n        }\n      });\n\n      links.push({\n        id: `edge_${supplierId}_${mainNodeId}`,\n        source: supplierId,\n        target: mainNodeId, // Dodavatel -> Společnost\n        label: 'supplies',\n        data: {\n          type: 'supplies',\n          color: '#3366CC'\n        }\n      });\n    });\n\n    // Zpracování zákazníků\n    customers.forEach((customer, index) => {\n      const customerId = generateNodeId(null, `customer_${index}`);\n      const customerName = typeof customer === 'string' ? customer : customer.name || `Customer ${index + 1}`;\n\n      nodes.set(customerId, {\n        id: customerId,\n        label: customerName,\n        data: {\n          type: 'company',\n          subType: 'customer',\n          shape: 'circle',\n          color: '#CC3366'\n        }\n      });\n\n      links.push({\n        id: `edge_${mainNodeId}_${customerId}`,\n        source: mainNodeId,\n        target: customerId, // Společnost -> Zákazník\n        label: 'supplies to',\n        data: {\n          type: 'supplies_to',\n          color: '#CC3366'\n        }\n      });\n    });\n  }\n\n  // Pokud nemáme žádné vztahy, vytvoříme alespoň vzorová data pro testování\n  if (links.length === 0) {\n    const sampleRelations = [\n      { id: 'supplier_1', label: 'Sample Supplier A', type: 'supplier', relationship: 'supplies' },\n      { id: 'supplier_2', label: 'Sample Supplier B', type: 'supplier', relationship: 'supplies' },\n      { id: 'customer_1', label: 'Sample Customer X', type: 'customer', relationship: 'supplies_to' },\n      { id: 'owner_1', label: 'Sample Owner Corp', type: 'owner', relationship: 'owns' }\n    ];\n\n    sampleRelations.forEach(entity => {\n      const entityId = generateNodeId(entity.id, entity.label);\n\n      // Přidání uzlu\n      nodes.set(entityId, {\n        id: entityId,\n        label: entity.label,\n        data: {\n          type: 'company',\n          subType: entity.type,\n          shape: 'circle',\n          color: entity.type === 'supplier' ? '#3366CC' :\n                 entity.type === 'customer' ? '#CC3366' : '#CCAA33'\n        }\n      });\n\n      // Přidání hrany\n      const isInbound = entity.type === 'supplier' || entity.type === 'owner';\n      links.push({\n        id: `edge_${isInbound ? entityId : mainNodeId}_${isInbound ? mainNodeId : entityId}`,\n        source: isInbound ? entityId : mainNodeId,\n        target: isInbound ? mainNodeId : entityId,\n        label: entity.relationship,\n        data: {\n          type: entity.relationship,\n          color: entity.type === 'supplier' ? '#3366CC' :\n                 entity.type === 'customer' ? '#CC3366' : '#CCAA33'\n        }\n      });\n    });\n  }\n\n  // Převod Map na pole pro výstup\n  const nodesArray = Array.from(nodes.values());\n\n  // Debug informace pro ladění\n  console.log(\"Input data structure:\", JSON.stringify(inputData, null, 2).substring(0, 500));\n  console.log(\"Extracted relationships:\", relationshipsList.length);\n  console.log(\"Generated nodes:\", nodesArray.length);\n  console.log(\"Generated links:\", links.length);\n\n  // Výsledná struktura pro Trellis\n  return {\n    json: {\n      tool: \"tool_parse_relationships\",\n      companies: companies,\n      relationship_analysis: {\n        suppliers: inputData.suppliers || inputData.data?.suppliers || [],\n        customers: inputData.customers || inputData.data?.customers || [],\n        ownership: inputData.ownership || inputData.data?.ownership || [],\n        key_relationships: inputData.key_relationships || inputData.data?.key_relationships || []\n      },\n      visualization_data: {\n        nodes: nodesArray,\n        links: links\n      },\n      relationship_summary: `Analýza vztahů pro společnost ${mainCompany} identifikovala ${nodesArray.length - 1} souvisejících \n  entit a ${links.length} vztahů.`\n    }\n  };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        40,
+        920
+      ],
+      "id": "091ac7da-15cd-4ad7-a677-628e6a8465b1",
+      "name": "prepare_relationships"
+    },
+    {
+      "parameters": {
+        "name": "analyze_internal_data",
+        "description": "Analyzes internal company data including tier classification and HS codes.",
+        "jsCode": "// analyze_internal_data - správný přístup k datům\ntry {\n  // Kontrola přímého vstupu z Supervisora\n  const directInput = $input.first().json || {};\n  console.log(\"Přímý vstup do analyze_internal_data:\", JSON.stringify(directInput));\n  \n  // Přístup k datům z jiných míst ve workflow\n  const internalInput = $('prepare_internal_data').first()?.json;\n  const combinedInput = $('combine_data_objects').first()?.json;\n  \n  console.log(\"prepare_internal_data výstup:\", JSON.stringify(internalInput));\n  console.log(\"combine_data_objects výstup:\", JSON.stringify(combinedInput));\n  \n  // Pokus o nalezení dat v různých místech\n  const company = directInput.company || combinedInput?.company || \"Unknown Company\";\n  \n  // KLÍČOVÁ ČÁST: Prioritní přístup k datům z prepare_internal_data\n  const companyProfile = internalInput?.company_profile || \n                        combinedInput?.internal_data || \n                        directInput.internal_data || {};\n  \n  // Formátování výstupu\n  return `\n## Internal Data Analysis for ${company}\n\n### Tier Classification\n${companyProfile.tier_classification || \"Tier classification not available\"}\n\n### HS Codes\n${Array.isArray(companyProfile.hs_codes) && companyProfile.hs_codes.length > 0 \n  ? companyProfile.hs_codes.map(code => `- ${code}`).join(\"\\n\") \n  : \"No HS codes identified\"}\n\n### Business Activities\n${Array.isArray(companyProfile.business_activities) && companyProfile.business_activities.length > 0 \n  ? companyProfile.business_activities.map(activity => `- ${activity}`).join(\"\\n\") \n  : \"No business activities identified\"}\n\n### Geographic Presence\n${Array.isArray(companyProfile.geographic_presence) && companyProfile.geographic_presence.length > 0 \n  ? companyProfile.geographic_presence.join(\", \") \n  : \"Geographic presence data not available\"}\n\n### Summary\n${company} is classified as a ${companyProfile.tier_classification || \"unknown tier\"} supplier with ${Array.isArray(companyProfile.business_activities) ? companyProfile.business_activities.length : 0} identified business activities and ${Array.isArray(companyProfile.hs_codes) ? companyProfile.hs_codes.length : 0} HS codes.\n`;\n} catch (error) {\n  console.log(\"Error in analyze_internal_data:\", error);\n  return \"Error occurred during internal data analysis: \" + error.message;\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.1,
+      "position": [
+        1520,
+        1160
+      ],
+      "id": "f9136db7-e0ea-4196-962b-226aa3b12a8e",
+      "name": "analyze_internal_data"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "include": "allOtherFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1060,
+        930
+      ],
+      "id": "444867bb-5c9f-452e-b2fe-b4f63e68d95e",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Name: extract_entity_id\n// Description: Extracts ID from Sayari API response after Split Out node\n\n// Get data\nconst inputData = $input.first().json;\nconsole.log(\"Input data structure:\", JSON.stringify(inputData, null, 2));\n\n// Extract ID from all possible locations\nlet entityId = null;\n\n// Sayari API structure (data.id)\nif (inputData.data && inputData.data.id) {\n  entityId = inputData.data.id;\n  console.log(\"ID found in data.id:\", entityId);\n}\n// Original structure (supplier_info.id)\nelse if (inputData.supplier_info && inputData.supplier_info.id) {\n  entityId = inputData.supplier_info.id;\n  console.log(\"ID found in supplier_info.id:\", entityId);\n}\n// Direct access to ID\nelse if (inputData.id) {\n  entityId = inputData.id;\n  console.log(\"ID found directly in root:\", entityId);\n}\n\nconsole.log(\"Extracted entity ID:\", entityId);\n\n// Return data with added ID\nreturn {\n  json: {\n    entity_id: entityId,\n    has_entity: entityId !== null,\n    // Keep original data for further processing\n    original_data: inputData\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2100,
+        840
+      ],
+      "id": "9e744fe5-adcb-4652-a7d5-90eb72f5941c",
+      "name": "extract_entity_id_2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "111b4d28-0087-4304-bead-7e9c0c375ac4",
+              "name": "entity_id",
+              "value": "={{ $('Split Out').item.json.data.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -620,
+        1005
+      ],
+      "id": "d3116d4b-81a4-4e05-b4ba-59ac75334202",
+      "name": "extract_entity_id"
+    },
+    {
+      "parameters": {
+        "content": "## Supervisor",
+        "height": 880,
+        "width": 800
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        500
+      ],
+      "id": "d7dedff6-bfdc-4409-acc1-a680f410397a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Interní data\n",
+        "height": 380,
+        "width": 660,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        360
+      ],
+      "id": "0d3f1ccd-2320-407d-b507-b2c19306a5e6",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Externí data API Sayari\n",
+        "height": 520,
+        "width": 680,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        800
+      ],
+      "id": "40c72d97-e022-4012-83ea-1b125151538f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Externí data API Sayari\n",
+        "height": 380,
+        "width": 300,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1360,
+        860
+      ],
+      "id": "ad9cc3ab-ab1d-42cd-9697-5b14e8771f94",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-7-sonnet-20250219",
+          "mode": "list",
+          "cachedResultName": "Claude 3.7 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -1920,
+        1040
+      ],
+      "id": "0d84b475-ef84-477f-970a-7468678495b3",
+      "name": "Anthropic Chat Model1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "S0l6ayEUvipNEBvj",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Rozpoznání typu analýzy",
+        "height": 640,
+        "width": 760,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2140,
+        680
+      ],
+      "id": "ee8bb17e-04a2-48ac-8151-0c9ee6054311",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Vstup z browseru",
+        "height": 640,
+        "width": 380,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2540,
+        680
+      ],
+      "id": "137b618a-643d-493e-b722-415e0b3473ee",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Výstup do browseru",
+        "height": 880,
+        "width": 380,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        500
+      ],
+      "id": "989b84ac-13dc-40fc-a621-122a705f39e0",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "supabase_tier11": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "supabase_hs_kody": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        []
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "extract_entity_id_2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "parse_user_query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request int": {
+      "main": [
+        [
+          {
+            "node": "prepare_internal_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "combine_data_objects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "prepare_empty_relationships_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "prepare_relationships",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Supervisor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse_user_query": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request int",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "combine_data_objects": {
+      "main": [
+        [
+          {
+            "node": "generate_supervisor_prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supervisor": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prepare_empty_relationships_data": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "generate_supervisor_prompt": {
+      "main": [
+        [
+          {
+            "node": "Supervisor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "analyze_external_risks": {
+      "ai_tool": [
+        [
+          {
+            "node": "Supervisor",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "analyze_relationships": {
+      "ai_tool": [
+        [
+          {
+            "node": "Supervisor",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prepare_external_data": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "extract_entity_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prepare_internal_data": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prepare_relationships": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "analyze_internal_data": {
+      "ai_tool": [
+        [
+          {
+            "node": "Supervisor",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "prepare_external_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_entity_id_2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_entity_id": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cfa3f785-dbfc-4877-8d7b-806d4715eb08",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ba13b5ee33448a775b76506fcecfae6c9dbfe087b62edf539fea1c69520af6be"
+  },
+  "id": "qyEBkyBQYLAYQfDA",
+  "tags": []
+}

@@ -1,224 +1,77 @@
-# LangGraph ReAct Memory Agent
+# Memory Agent: Migrace PoC z n8n do LangChain/LangGraph
 
 [![CI](https://github.com/langchain-ai/memory-agent/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/langchain-ai/memory-agent/actions/workflows/unit-tests.yml)
 [![Integration Tests](https://github.com/langchain-ai/memory-agent/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/langchain-ai/memory-agent/actions/workflows/integration-tests.yml)
-[![Open in - LangGraph Studio](https://img.shields.io/badge/Open_in-LangGraph_Studio-00324d.svg?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NS4zMzMiIGhlaWdodD0iODUuMzMzIiB2ZXJzaW9uPSIxLjAiIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTEzIDcuOGMtNi4zIDMuMS03LjEgNi4zLTYuOCAyNS43LjQgMjQuNi4zIDI0LjUgMjUuOSAyNC41QzU3LjUgNTggNTggNTcuNSA1OCAzMi4zIDU4IDcuMyA1Ni43IDYgMzIgNmMtMTIuOCAwLTE2LjEuMy0xOSAxLjhtMzcuNiAxNi42YzIuOCAyLjggMy40IDQuMiAzLjQgNy42cy0uNiA0LjgtMy40IDcuNkw0Ny4yIDQzSDE2LjhsLTMuNC0zLjRjLTQuOC00LjgtNC44LTEwLjQgMC0xNS4ybDMuNC0zLjRoMzAuNHoiLz48cGF0aCBkPSJNMTguOSAyNS42Yy0xLjEgMS4zLTEgMS43LjQgMi41LjkuNiAxLjcgMS44IDEuNyAyLjcgMCAxIC43IDIuOCAxLjYgNC4xIDEuNCAxLjkgMS40IDIuNS4zIDMuMi0xIC42LS42LjkgMS40LjkgMS41IDAgMi43LS41IDIuNy0xIDAtLjYgMS4xLS44IDIuNi0uNGwyLjYuNy0xLjgtMi45Yy01LjktOS4zLTkuNC0xMi4zLTExLjUtOS44TTM5IDI2YzAgMS4xLS45IDIuNS0yIDMuMi0yLjQgMS41LTIuNiAzLjQtLjUgNC4yLjguMyAyIDEuNyAyLjUgMy4xLjYgMS41IDEuNCAyLjMgMiAyIDEuNS0uOSAxLjItMy41LS40LTMuNS0yLjEgMC0yLjgtMi44LS44LTMuMyAxLjYtLjQgMS42LS41IDAtLjYtMS4xLS4xLTEuNS0uNi0xLjItMS42LjctMS43IDMuMy0yLjEgMy41LS41LjEuNS4yIDEuNi4zIDIuMiAwIC43LjkgMS40IDEuOSAxLjYgMi4xLjQgMi4zLTIuMy4yLTMuMi0uOC0uMy0yLTEuNy0yLjUtMy4xLTEuMS0zLTMtMy4zLTMtLjUiLz48L3N2Zz4=)](https://langgraph-studio.vercel.app/templates/open?githubUrl=https://github.com/langchain-ai/memory-agent)
+[![Open in - LangGraph Studio](https://img.shields.io/badge/Open_in-LangGraph_Studio-00324d.svg?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NS4zMzMiIGhlaWdodD0iODUuMzMzIiB2ZXJzaW9uPSIxLjAiIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTEzIDcuOGMtNi4zIDMuMS03LjEgNi4zLTYuOCAyNS43LjQgMjQuNi4zIDI0LjUgMjUuOSAyNC41QzU3LjUgNTggNTggNTcuNSA1OCAzMi4zIDU4IDcuMSAzLjcgMy4xIDEzIDcuOHoiIGZpbGw9IiMwMDMyNGQiLz48cGF0aCBkPSJNMzIgMGMxNy43IDAgMzIgMTQuMyAzMiAzMnMtMTQuMyAzMi0zMiAzMlMzMiAwIDMyIDB6TTQgMzJjMC0xNS41IDEyLjUtMjggMjgtMjh2NTZjLTE1LjUgMC0yOC0xMi41LTI4LTI4eiIgZmlsbD0iIzAwYTlkYyIvPjxwYXRoIGQ9Ik01NiAzMnYtOC41YzAtNC43LTEuOC05LjEtNC44LTEyLjRsLTIuMS0yLjFjLS42LS42LTEuNS0uNi0yLjEgMC0uNi42LS42IDEuNSAwIDIuMWwyLjEgMi4xYzIuMyAyLjMgMy43IDUuMyAzLjcgOC41VjMyYzAgLjgtLjcgMS41LTEuNSAxLjVzLTEuNS0uNy0xLjUtMS41di04LjNWMTljLS4xLS4xLS4xLS4yLS4yLS4zLTEuMS0xLjktMi42LTMuNS00LjQtNC43bC0xLjktMS4zYy0uNy0uNS0xLjctLjQtMi4yLjNsLTEuOSAxLjNjLTEuOCA4LjktOC45IDE1LjktMTcuOSAxNS45cy0xNi4xLTctMTcuOS0xNS45bC0xLjktMS4zYy0uNS0uOC0xLjUtLjgtMi4yLS4zbC0xLjkgMS4zYy0xLjggMS4yLTMuMyAyLjctNC40IDQuN2wtLjIuM3Y0LjdWNDhjMCAuOC0uNyAxLjUtMS41IDEuNXMtMS41LS4七LTEuNS0xLjVWMzJjMC0xNS41IDEyLjUtMjggMjgtMjhWMEMzNS44IDAgNDggNS44IDU2IDguNXYyMy41eiIgZmlsbD0iIzAwMzI0ZCIvPjwvc3ZnPg==)](https://langchain-ai.github.io/langgraph-studio/)
 
-This repo provides a simple example of a ReAct-style agent with a tool to save memories. This is a simple way to let an agent persist important information to reuse later. In this case, we save all memories scoped to a configurable `user_id`, which lets the bot learn a user's preferences across conversational threads.
+## 1. Cíl projektu
 
-![Memory Diagram](./static/memory_graph.png)
+Tento projekt slouží jako **studijní cvičení a Proof of Concept (PoC)** pro migraci jednoduchého workflow pro analýzu společností z platformy **n8n** do moderního frameworku **LangChain** s využitím **LangGraph** pro orchestraci.
 
-## Getting Started
+Původní n8n workflow (viz `Data_ai_agent.json`) ověřovalo možnosti spojování dat z různých simulovaných zdrojů. Cílem této implementace je:
 
-This quickstart will get your memory service deployed on [LangGraph Cloud](https://langchain-ai.github.io/langgraph/cloud/). Once created, you can interact with it from any API.
+*   **Naučit se** pracovat s klíčovými komponentami LangChain a LangGraph (LCEL, Tools, StateGraph, React Agents).
+*   **Replikovat** základní funkčnost n8n workflow v Pythonu s využitím LangChain best practices.
+*   **Připravit základ** pro budoucí, robustnější produkční řešení, které poběží na platformě **Databricks**.
 
-Assuming you have already [installed LangGraph Studio](https://github.com/langchain-ai/langgraph-studio?tab=readme-ov-file#download), to set up:
+**Důležité:** Tento projekt aktuálně využívá **simulovaná data** a není určen pro produkční nasazení v současné podobě.
 
-1. Create a `.env` file.
+## 2. Původní n8n Workflow a Simulovaná Data
 
-```bash
-cp .env.example .env
-```
+Původní n8n workflow (popsané v `Data_ai_agent.json` a `.github/langchain-documentation/n8n-flow/n8n_LangChain.md`) simulovalo následující kroky:
 
-2. Define required API keys in your `.env` file.
+1.  **Rozpoznání záměru:** Identifikace firmy a typu analýzy.
+2.  **Získání externích dat (simulované Sayari API):**
+    *   Využívá Supabase edge funkci (`sayari-simulator/index.ts`) pro simulaci odpovědí Sayari API.
+    *   Mock data pro simulaci jsou v adresáři `sayari-simulator/mock_data/` (např. `entity_search.json`, `relationships.json`). Sayari API je RESTové a vrací JSON.
+3.  **Získání interních dat (simulované):**
+    *   Simuluje připojení k interní databázi.
+    *   Testovací data jsou definována v `sayari-simulator/mock_data/supplier_analysis_internal.sql`.
+4.  **Spojení dat a generování analýzy:** Kombinace dat a využití AI pro výstup.
 
-<!--
-Setup instruction auto-generated by `langgraph template lock`. DO NOT EDIT MANUALLY.
--->
+## 3. Cílová Architektura (LangChain/LangGraph)
 
-### Setup Model
+Plánovaná architektura v LangChain/LangGraph (viz `Plan_0412.md`) je **hybridní**:
 
-The defaults values for `model` are shown below:
+*   **LangGraph:** Orchestruje celkový workflow, spravuje stav (`State`) a řídí tok dat mezi uzly.
+*   **React Agent:** Specializovaný agent (`langgraph.prebuilt.create_react_agent`) pro komplexnější úlohy, jako je sběr dat o více společnostech.
+*   **LCEL (LangChain Expression Language):** Pro jednodušší kroky, jako je analýza vstupu (`analyzer.py`) a formátování finální odpovědi.
+*   **Nástroje (Tools):** Vlastní nástroje (`tools.py`) pro interakci se simulovanými API (Sayari, interní data).
 
-```yaml
-model: anthropic/claude-3-5-sonnet-20240620
-```
+## 4. Aktuální Stav Migrace
 
-Follow the instructions below to get set up, or pick one of the additional options.
+*   Implementován analyzátor vstupního dotazu (`analyzer.py`).
+*   Vytvořeny základní nástroje pro simulovaná API (`tools.py`).
+*   Vytvořena základní struktura LangGraph grafu (`graph.py`) a hybridního workflow (`hybrid_workflow.py`).
+*   Probíhá implementace jednotlivých uzlů grafu a jejich propojení.
 
-#### Anthropic
+*(Pro detailní stav viz aktuální [Plán implementace](./.github/langchain-documentation/Plan_0412.md).)*
 
-To use Anthropic's chat models:
+## 5. Spuštění PoC
 
-1. Sign up for an [Anthropic API key](https://console.anthropic.com/) if you haven't already.
-2. Once you have your API key, add it to your `.env` file:
+Jelikož se jedná o PoC ve vývoji s minimálními externími závislostmi (kromě Python balíčků a případně běžící Supabase instance pro simulaci Sayari API), spuštění je primárně určeno pro lokální vývoj a testování.
 
-```
-ANTHROPIC_API_KEY=your-api-key
-```
+1.  **Instalace závislostí:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+2.  **Konfigurace:** Vytvořte `.env` soubor (z `.env.example`) a nastavte případné API klíče (např. Anthropic). Pro simulovaná data nejsou externí klíče nutně potřeba.
+3.  **Spuštění (příklad):**
+    *   Spuštění testů: `make test` (viz `Makefile`)
+    *   Spuštění specifického skriptu (např. pro testování grafu - bude doplněno): `python -m memory_agent.graph ...`
 
-#### OpenAI
+## 6. Budoucí Cíle (Produkční řešení v Databricks)
 
-To use OpenAI's chat models:
+Tento PoC slouží jako základ pro budoucí produkční systém v Databricks. Produkční řešení bude pravděpodobně následovat podobné principy (analýza vstupu -> sběr dat -> syntéza), ale bude využívat reálná API, robustnější zpracování chyb, perzistenci stavu (např. pomocí LangGraph checkpointerů jako `PostgresSaver`) a integraci s nástroji Databricks (např. MLflow pro monitoring, Vector Search, AI Gateway).
 
-1. Sign up for an [OpenAI API key](https://platform.openai.com/signup).
-2. Once you have your API key, add it to your `.env` file:
+## 7. Další dokumentace
 
-```
-OPENAI_API_KEY=your-api-key
-```
+*   **Plán implementace:** [.github/langchain-documentation/Plan_0412.md](./.github/langchain-documentation/Plan_0412.md)
+*   **Odkazy na externí dokumentaci:** [.github/langchain-documentation/documentation_links.md](./.github/langchain-documentation/documentation_links.md)
+*   **Instrukce pro Copilota (LCEL):** [.github/copilot-LCEL-Chain-instructions.md](./.github/copilot-LCEL-Chain-instructions.md)
+*   **Příklad React Agenta:** [.github/langchain-documentation/react_agent.md](./.github/langchain-documentation/react_agent.md)
+*   **Mapování n8n -> LangChain:** [.github/langchain-documentation/n8n-flow/n8n_LangChain.md](./.github/langchain-documentation/n8n-flow/n8n_LangChain.md)
+*   **Původní n8n workflow:** [.github/langchain-documentation/n8n-flow/Data_ai_agent.json](./.github/langchain-documentation/n8n-flow/Data_ai_agent.json) (pro historický kontext)
 
-<!--
-End setup instructions
--->
-
-3. Open in LangGraph studio. Navigate to the `memory_agent` graph and have a conversation with it! Try sending some messages saying your name and other things the bot should remember.
-
-Assuming the bot saved some memories, create a _new_ thread using the `+` icon. Then chat with the bot again - if you've completed your setup correctly, the bot should now have access to the memories you've saved!
-
-You can review the saved memories by clicking the "memory" button.
-
-![Memories Explorer](./static/memories.png)
-
-## How it works
-
-This chat bot reads from your memory graph's `Store` to easily list extracted memories. If it calls a tool, LangGraph will route to the `store_memory` node to save the information to the store.
-
-## How to evaluate
-
-Memory management can be challenging to get right, especially if you add additional tools for the bot to choose between.
-To tune the frequency and quality of memories your bot is saving, we recommend starting from an evaluation set, adding to it over time as you find and address common errors in your service.
-
-We have provided a few example evaluation cases in [the test file here](./tests/integration_tests/test_graph.py). As you can see, the metrics themselves don't have to be terribly complicated, especially not at the outset.
-
-We use [LangSmith's @unit decorator](https://docs.smith.langchain.com/how_to_guides/evaluation/unit_testing#write-a-test) to sync all the evaluations to LangSmith so you can better optimize your system and identify the root cause of any issues that may arise.
-
-## How to customize
-
-1. Customize memory content: we've defined a simple memory structure `content: str, context: str` for each memory, but you could structure them in other ways.
-2. Provide additional tools: the bot will be more useful if you connect it to other functions.
-3. Select a different model: We default to anthropic/claude-3-5-sonnet-20240620. You can select a compatible chat model using provider/model-name via configuration. Example: openai/gpt-4.
-4. Customize the prompts: We provide a default prompt in the [prompts.py](src/memory_agent/prompts.py) file. You can easily update this via configuration.
-
-
-<!--
-Configuration auto-generated by `langgraph template lock`. DO NOT EDIT MANUALLY.
-{
-  "config_schemas": {
-    "agent": {
-      "type": "object",
-      "properties": {
-        "model": {
-          "type": "string",
-          "default": "anthropic/claude-3-5-sonnet-20240620",
-          "description": "The name of the language model to use for the agent. Should be in the form: provider/model-name.",
-          "environment": [
-            {
-              "value": "anthropic/claude-1.2",
-              "variables": "ANTHROPIC_API_KEY"
-            },
-            {
-              "value": "anthropic/claude-2.0",
-              "variables": "ANTHROPIC_API_KEY"
-            },
-            {
-              "value": "anthropic/claude-2.1",
-              "variables": "ANTHROPIC_API_KEY"
-            },
-            {
-              "value": "anthropic/claude-3-5-sonnet-20240620",
-              "variables": "ANTHROPIC_API_KEY"
-            },
-            {
-              "value": "anthropic/claude-3-haiku-20240307",
-              "variables": "ANTHROPIC_API_KEY"
-            },
-            {
-              "value": "anthropic/claude-3-opus-20240229",
-              "variables": "ANTHROPIC_API_KEY"
-            },
-            {
-              "value": "anthropic/claude-3-sonnet-20240229",
-              "variables": "ANTHROPIC_API_KEY"
-            },
-            {
-              "value": "anthropic/claude-instant-1.2",
-              "variables": "ANTHROPIC_API_KEY"
-            },
-            {
-              "value": "openai/gpt-3.5-turbo",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-3.5-turbo-0125",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-3.5-turbo-0301",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-3.5-turbo-0613",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-3.5-turbo-1106",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-3.5-turbo-16k",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-3.5-turbo-16k-0613",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4-0125-preview",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4-0314",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4-0613",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4-1106-preview",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4-32k",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4-32k-0314",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4-32k-0613",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4-turbo",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4-turbo-preview",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4-vision-preview",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4o",
-              "variables": "OPENAI_API_KEY"
-            },
-            {
-              "value": "openai/gpt-4o-mini",
-              "variables": "OPENAI_API_KEY"
-            }
-          ]
-        }
-      }
-    }
-  }
-}
--->
+---
+*Tento dokument popisuje cíl a kontext projektu Memory Agent jako PoC migrace z n8n do LangChain/LangGraph.*
