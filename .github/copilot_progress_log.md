@@ -6,7 +6,7 @@
 
 **Provedené kroky:**
 
-1.  **Porozumění projektu:** Vyjasnili jsme si, že projekt je PoC migrace n8n workflow do LangChain/LangGraph s cílem naučit se tyto frameworky a připravit základ pro produkční řešení v Databricks. Projekt využívá simulovaná data.
+1.  **Porozumění projektu:** Vyjasnili jsme si, že projekt je PoC migrace n8n workflow pro **sledování dodavatelského řetězce v automotive** do LangChain/LangGraph s cílem naučit se tyto frameworky a připravit základ pro produkční řešení v Databricks. Projekt využívá simulovaná data.
 2.  **Organizace dokumentace:**
     *   Odstraněn původní `README.md`.
     *   Vytvořen nový `README.md` zaměřený na funkční popis PoC.
