@@ -1,5 +1,3 @@
-
-
 import logging
 import traceback
 
@@ -23,6 +21,7 @@ logger = logging.getLogger(__name__)
 # Definition of analysis types
 AnalysisType = Literal["risk_comparison", "common_suppliers", "general"]
 
+# DOKONČENO: Definice datových struktur pro analýzu dotazů
 class AnalysisResult(TypedDict):
     """Result of user input analysis."""
     companies: List[str]
@@ -66,6 +65,7 @@ class CompanyAnalysisRequest(BaseModel):
 # List of valid analysis types for validation
 VALID_ANALYSIS_TYPES = ["risk_comparison", "common_suppliers", "general"]
 
+# DOKONČENO: Implementace systémového promptu pro analýzu dotazů
 # Enhanced prompt inspired by React approach - supports more structured reasoning
 ANALYZER_PROMPT = """You are a specialized query analyzer that identifies companies and analysis types in user queries.
 
@@ -106,6 +106,7 @@ First, perform reasoning and analysis (DO NOT PRINT THIS ANYWHERE), and then res
 "Company name; analysis_type"
 """
 
+# DOKONČENO: Implementace hlavní funkce pro analýzu dotazů pomocí LCEL
 async def analyze_query(
     user_input: str, 
     config: Optional[RunnableConfig] = None,
@@ -164,6 +165,7 @@ async def analyze_query(
         logger.error(traceback.format_exc())
         return default_result
 
+# DOKONČENO: Implementace parseru odpovědí z LLM do strukturované podoby
 def parse_response(response: str, original_query: str) -> AnalysisResult:
     """Parses model response and creates structured result.
     

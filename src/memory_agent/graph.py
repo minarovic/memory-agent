@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 # Initialize the language model to be used for memory extraction
 llm = init_chat_model()
 
-
+# BLOKOVÁNO(B1-B5): Implementace workflow v LangGraph čeká na dokončení unit testů pro tools.py (A4)
 async def analyze_company_input(state: State, config: RunnableConfig) -> dict:
     """Analyzuje vstup uživatele pro identifikaci společností a typu analýzy."""
     try:

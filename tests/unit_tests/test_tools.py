@@ -1,3 +1,4 @@
+# V PROCESU(A4): Implementace unit testů pro SayariApiTool, SupabaseInternalDataTool a SayariRelationshipsTool
 import pytest
 import json
 from unittest.mock import patch, AsyncMock, MagicMock

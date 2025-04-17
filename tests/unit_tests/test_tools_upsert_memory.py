@@ -1,6 +1,7 @@
 """
 Unit tests for the upsert_memory function in tools.py
 """
+# V PROCESU(A4): Implementace unit testů pro funkci upsert_memory - chybí test úspěšného uložení a chybových scénářů
 
 import pytest
 import uuid

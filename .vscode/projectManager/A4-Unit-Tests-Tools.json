@@ -1,0 +1,12 @@
+{
+  "name": "A4-Unit-Tests-Tools",
+  "rootPath": "/Users/marekminarovic/claude-code/memory-agent",
+  "paths": [
+    "tests/unit_tests/test_tools.py",
+    "tests/unit_tests/test_tools_upsert_memory.py",
+    "src/memory_agent/tools.py",
+    "PROJECT_PLAN.md"
+  ],
+  "group": "Unit Testy",
+  "description": "Unit testy pro tools.py - implementace testů pro SayariRelationshipsTool a upsert_memory"
+}

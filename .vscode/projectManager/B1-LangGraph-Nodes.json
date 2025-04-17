@@ -1,0 +1,12 @@
+{
+  "name": "B1-LangGraph-Nodes",
+  "rootPath": "/Users/marekminarovic/claude-code/memory-agent",
+  "paths": [
+    "src/memory_agent/graph.py",
+    "src/memory_agent/state.py",
+    "src/memory_agent/analyzer.py",
+    "PROJECT_PLAN.md"
+  ],
+  "group": "LangGraph",
+  "description": "Implementace základních uzlů LangGraph workflow"
+}

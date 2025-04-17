@@ -11,7 +11,7 @@ from typing_extensions import Annotated
 
 from memory_agent.analyzer import AnalysisResult
 
-
+# BLOKOVÁNO(B1): Implementace stavového grafu čeká na dokončení unit testů pro tools.py (A4)
 @dataclass(kw_only=True)
 class State:
     """Main graph state."""

@@ -1,0 +1,12 @@
+{
+  "name": "D1-Integration-Tests",
+  "rootPath": "/Users/marekminarovic/claude-code/memory-agent",
+  "paths": [
+    "tests/integration_tests/test_graph.py",
+    "src/memory_agent/graph.py",
+    "src/memory_agent/hybrid_workflow.py",
+    "PROJECT_PLAN.md"
+  ],
+  "group": "Integrace",
+  "description": "Integrační testy celého workflow"
+}

@@ -1,0 +1,26 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "workbench.colorCustomizations": {
+      "activityBar.background": "#1C3252",
+      "titleBar.activeBackground": "#1C3252",
+      "titleBar.activeForeground": "#FFFFFF"
+    },
+    "projectManager.groups": [
+      "Unit Testy",
+      "LangGraph",
+      "React Agent",
+      "Integrace"
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "alefragnani.project-manager",
+      "gruntfuggly.todo-tree"
+    ]
+  }
+}

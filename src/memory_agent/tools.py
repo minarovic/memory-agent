@@ -15,7 +15,7 @@ from memory_agent.configuration import Configuration
 
 logger = logging.getLogger(__name__)
 
-
+# V PROCESU(A4): Implementace funkce upsert_memory pro ukládání paměti - čeká na dokončení testů
 async def upsert_memory(
     content: str,
     context: str,
@@ -81,6 +81,7 @@ async def upsert_memory(
         return f"Failed to store memory: {str(e)}"
 
 
+# V PROCESU: Implementace nástroje pro získávání dat ze Sayari API
 class SayariApiTool(BaseTool):
     """Nástroj pro volání Sayari API a získání informací o společnosti."""
     
@@ -169,6 +170,7 @@ class SayariApiTool(BaseTool):
         }
 
 
+# V PROCESU: Implementace nástroje pro získávání interních dat ze Supabase
 class SupabaseInternalDataTool(BaseTool):
     """Nástroj pro získání interních dat o společnosti ze Supabase."""
     
@@ -239,6 +241,7 @@ class SupabaseInternalDataTool(BaseTool):
         }
 
 
+# V PROCESU(A4): Implementace nástroje pro získávání vztahů entit ze Sayari API - chybí testy pro úspěšnou odpověď a prázdné ID
 class SayariRelationshipsTool(BaseTool):
     """Nástroj pro získání vztahů entity z Sayari API."""
     

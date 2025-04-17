@@ -1,0 +1,11 @@
+{
+  "name": "C1-React-Agent",
+  "rootPath": "/Users/marekminarovic/claude-code/memory-agent",
+  "paths": [
+    "src/memory_agent/hybrid_workflow.py",
+    "src/memory_agent/tools.py",
+    "PROJECT_PLAN.md"
+  ],
+  "group": "React Agent",
+  "description": "Implementace React agenta pro sběr dat o společnostech"
+}
