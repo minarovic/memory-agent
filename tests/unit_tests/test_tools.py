@@ -176,6 +176,43 @@ async def test_sayari_relationships_tool_success(mock_get):
     assert "customers" in result["relationships"]
     assert "Supplier A" in result["relationships"]["suppliers"]
     assert "Customer X" in result["relationships"]["customers"]
+    
+    # Ověření vizualizačních dat
+    assert "nodes" in result["visualization"]
+    assert "links" in result["visualization"]
+    assert len(result["visualization"]["nodes"]) == 3  # Test Company, Supplier A, Customer X
+    assert len(result["visualization"]["links"]) == 2  # 2 vztahy
+    
+    # Ověření struktury uzlů a hran
+    for node in result["visualization"]["nodes"]:
+        assert "id" in node
+        assert "label" in node
+        assert "data" in node
+        assert "type" in node["data"]
+        assert "color" in node["data"]
+    
+    for link in result["visualization"]["links"]:
+        assert "source" in link
+        assert "target" in link
+        assert "label" in link
+        assert "data" in link
+        assert "type" in link["data"]
+        assert "color" in link["data"]
+    
+    # Ověření vizualizačních dat
+    assert "nodes" in result["visualization"]
+    assert "links" in result["visualization"]
+    assert len(result["visualization"]["nodes"]) == 3  # Test Company, Supplier A, Customer X
+    assert len(result["visualization"]["links"]) == 2  # 2 vztahy
+    
+    # Ověření barvy uzlů (podle typu)
+    nodes = {node["id"]: node for node in result["visualization"]["nodes"]}
+    assert nodes["source-1"]["data"]["color"] == "#3366CC"  # barva pro typ company
+    
+    # Ověření barvy hran (podle typu vztahu)
+    links = {link["id"]: link for link in result["visualization"]["links"]}
+    assert "has_supplier" in [link["label"] for link in result["visualization"]["links"]]
+    assert "supplies_to" in [link["label"] for link in result["visualization"]["links"]]
 
 
 @pytest.mark.asyncio
@@ -191,5 +228,20 @@ async def test_sayari_relationships_tool_empty_id(mock_get):
     
     # Ověření vrácených dat
     assert result["has_relationships"] == False
-    assert len(result["relationships"]) == 0
+    assert "relationships" in result
+    assert isinstance(result["relationships"], dict)
+    assert "suppliers" in result["relationships"]
+    assert "customers" in result["relationships"]
+    assert "ownership" in result["relationships"]
+    assert "key_relationships" in result["relationships"]
+    assert len(result["relationships"]["suppliers"]) == 0
+    assert len(result["relationships"]["customers"]) == 0
+    assert len(result["relationships"]["ownership"]) == 0
+    assert len(result["relationships"]["key_relationships"]) == 0
+    
+    # Ověření vizualizačních dat
     assert "visualization" in result
+    assert "nodes" in result["visualization"]
+    assert "links" in result["visualization"]
+    assert len(result["visualization"]["nodes"]) == 0
+    assert len(result["visualization"]["links"]) == 0
