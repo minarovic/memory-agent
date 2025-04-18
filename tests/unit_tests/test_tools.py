@@ -198,6 +198,40 @@ async def test_sayari_relationships_tool_success(mock_get):
         assert "data" in link
         assert "type" in link["data"]
         assert "color" in link["data"]
+
+
+@pytest.mark.asyncio
+@patch("httpx.AsyncClient.get")
+async def test_sayari_relationships_tool_empty_id(mock_get):
+    """Test volání vztahů s prázdným ID."""
+    # Vytvoření nástroje a volání metody s prázdným ID
+    tool = SayariRelationshipsTool()
+    result = await tool._arun("")
+    
+    # Ověření, že API nebylo voláno (protože ID je prázdné)
+    mock_get.assert_not_called()
+    
+    # Ověření vrácených dat - očekáváme prázdný výsledek s indikací absence vztahů
+    assert result["has_relationships"] == False
+    assert "relationships" in result
+    assert isinstance(result["relationships"], dict)
+    assert "suppliers" in result["relationships"]
+    assert "customers" in result["relationships"]
+    assert "ownership" in result["relationships"]
+    assert "key_relationships" in result["relationships"]
+    
+    # Ověření, že seznamy vztahů jsou prázdné
+    assert len(result["relationships"]["suppliers"]) == 0
+    assert len(result["relationships"]["customers"]) == 0
+    assert len(result["relationships"]["ownership"]) == 0
+    assert len(result["relationships"]["key_relationships"]) == 0
+    
+    # Ověření vizualizačních dat
+    assert "visualization" in result
+    assert "nodes" in result["visualization"]
+    assert "links" in result["visualization"]
+    assert len(result["visualization"]["nodes"]) == 0
+    assert len(result["visualization"]["links"]) == 0
     
     # Ověření vizualizačních dat
     assert "nodes" in result["visualization"]

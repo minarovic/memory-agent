@@ -139,16 +139,16 @@ steps:
       - id: "A4"
         name: "Unit testy pro tools.py"
         status: "V PROCESU"
-        progress: 50
+        progress: 30
         tasks:
           - desc: "Test pro SayariApiTool._arun s úspěšnou odpovědí"
-            status: "DOKONČENO"
+            status: "TODO"
           - desc: "Test pro SayariApiTool._arun s chybovou odpovědí"
-            status: "DOKONČENO"
+            status: "TODO"
           - desc: "Test pro SupabaseInternalDataTool._arun s úspěšnou odpovědí"
-            status: "DOKONČENO"
+            status: "TODO"
           - desc: "Test pro SupabaseInternalDataTool._arun s chybovou odpovědí"
-            status: "DOKONČENO"
+            status: "TODO"
           - desc: "Test pro SayariRelationshipsTool._arun s úspěšnou odpovědí"
             status: "TODO"
           - desc: "Test pro SayariRelationshipsTool._arun s prázdným ID"
