@@ -1,8 +1,11 @@
-# Implementace React agenta v hybridním workflow Memory Agent
+<!-- filepath: /Users/marekminarovic/claude-code/memory-agent/docs/react_agent.md -->
+# React Agent v Memory Agent projektu
 
-Tento dokument poskytuje podrobné pokyny pro implementaci React agenta jako specializovaného uzlu v rámci LangGraph workflow pro projekt Memory Agent.
+Tento dokument popisuje implementaci React agenta, který je používán v Memory Agent projektu pro komplexní zpracování dat o společnostech.
 
-## Přehled hybridního řešení
+## Přehled React agenta
+
+React agent je součástí hybridní architektury Memory Agenta a je zodpovědný za komplexní rozhodování při zpracování dat o více společnostech. Využívá LangGraph prebuilt komponentu `create_react_agent` a implementuje specializované nástroje pro interakci s externími API.
 
 Hybridní architekturu Memory Agent jsme navrhli s cílem maximalizovat výhody obou přístupů:
 
@@ -11,7 +14,17 @@ Hybridní architekturu Memory Agent jsme navrhli s cílem maximalizovat výhody 
 
 Toto řešení bylo implementováno v souboru `src/memory_agent/hybrid_workflow.py`.
 
-## Základní komponenty implementace
+## Architektura
+
+```mermaid
+graph TD
+    A[gather_company_data_node] --> B[create_data_gathering_agent]
+    B --> C[SayariApiTool]
+    B --> D[SupabaseInternalDataTool]
+    B --> E[SayariRelationshipsTool]
+```
+
+## Implementační detaily
 
 ### 1. Definice stavu grafu
 
@@ -198,15 +211,12 @@ React agent pracuje podle principu "ReAct" (Reasoning and Acting):
 3. **Flexibilita** - Může pracovat s různým počtem společností a různými scénáři
 4. **Čitelné uvažování** - Agent vysvětluje své rozhodování, což usnadňuje ladění a auditing
 
-## Integrace s workflow
+## Integrace s LangGraph workflow
 
-React agent je v našem workflow zapojen jako specializovaný uzel, který přijímá:
-- Seznam společností k analýze (z `company_analysis`)
+React agent je integrován do celkového LangGraph workflow jako specializovaný uzel, který je aktivován na základě typu analýzy detekovaného v `analyze_company_input` uzlu. React agent v našem workflow:
 
-A vrací:
-- Strukturovaná data o společnostech (`company_data`)
-- Interní data (`internal_data`)
-- Data o vztazích (`relationships_data`)
+- Přijímá seznam společností k analýze (z `company_analysis`)
+- Vrací strukturovaná data o společnostech (`company_data`), interní data (`internal_data`) a data o vztazích (`relationships_data`)
 
 ## Testování React agenta
 

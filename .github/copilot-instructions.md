@@ -1,15 +1,16 @@
 # Base Instructions for GitHub Copilot - Memory Agent Project
 
 ## Context
-Project: Memory Agent (Python) - AI agent for company analysis.
+Project: Memory Agent (Python) - AI agent for company analysis that uses external and internal data sources to provide insights on companies and their relationships.
 
 ## Packages and Versions
 Use these packages with their minimum versions:
-* **langchain**: 0.2.1 - Main framework
-* **langchain-core**: 0.2.1 - Core components
-* **langchain-anthropic**: 0.1.1 - For Claude integration
-* **langchain-openai**: 0.1.1 - For OpenAI integration
-* **langgraph**: 0.0.18 - For workflow orchestration
+* **langchain**: 0.3.20 - Main framework
+* **langchain-core**: 0.3.x - Core components
+* **langchain-anthropic**: 0.2.x - For Claude integration
+* **langchain-openai**: 0.3.4 - For OpenAI integration
+* **langgraph**: 0.2.70 - For workflow orchestration
+
 
 ## Main Rule: Use LangChain with LangGraph!
 When generating Python code for working with LLMs, agents, RAG, prompts, tools, or chains, **always prioritize and use standard components and practices of the LangChain framework and LangGraph for workflow orchestration.**
@@ -18,6 +19,25 @@ When generating Python code for working with LLMs, agents, RAG, prompts, tools, 
 * **Use LCEL** (LangChain Expression Language) for simpler, stateless operations.
 * **Avoid** alternative libraries (Haystack, LlamaIndex) unless explicitly requested.
 * **Do not reimplement** existing LangChain or LangGraph functionality.
+
+## Model Reasoning Behavior
+
+When responding to complex questions or generating code:
+
+1. **Take time to think step‑by‑step** before providing answers.  
+2. **Break down problems** into manageable components.  
+3. **Consider edge cases and potential issues** with any proposed solution.  
+4. **Explore multiple approaches** before settling on a final recommendation.  
+5. **Provide reasoning** for architectural and implementation decisions.  
+6. **Self‑review** generated code for bugs or inefficiencies before presenting.
+
+For especially complex problems involving system design, algorithm selection, or optimization, employ thorough reasoning by explicitly:
+
+- **Defining** the problem space and constraints.  
+- **Identifying** potential solution approaches.  
+- **Evaluating** trade‑offs between approaches.  
+- **Selecting and justifying** the optimal solution path.  
+
 
 ## Project Architecture
 Memory Agent uses a **hybrid architecture** that combines:
@@ -29,9 +49,8 @@ Memory Agent uses a **hybrid architecture** that combines:
 For detailed architecture information, see `langchain-documentation/architecture.md`.
 
 ## Preferred LLM Models
-* For most operations: **Claude 3.5 Sonnet** (`model="claude-3-5-sonnet-20240620"`)
-* For complex reasoning: **Claude 3 Opus** (`model="claude-3-opus-20240229"`)
-* For simple operations: **Claude 3 Haiku** (`model="claude-3-haiku-20240307"`)
+* For most operations: **Claude 3.7 Sonnet** (`model="claude-3-7-sonnet-20250219"`)
+
 
 ## Decision Tree for Component Selection
 * **Simple data transformation**: Use LCEL chain with pipe operator (`|`)
@@ -40,15 +59,25 @@ For detailed architecture information, see `langchain-documentation/architecture
 * **Structured data handling**: Use Pydantic models and TypedDict
 * **External system integration**: Use specialized tools as `BaseTool` subclasses
 
-## Specific Instructions
-For detailed instructions on specific tasks, consult the relevant files in `.github/` (if they exist):
+## References to Additional Documentation
+For detailed instructions and examples, consult these files:
 
-* Code Generation: `copilot-codeGeneration-instructions.md`.
-* LCEL Chains: `copilot-LCEL-Chain-instructions.md`.
-* LangGraph Workflow: `prompts/LangGraph.prompt.md`.
-* Testing: `copilot-test-instructions.md`.
-* Implementation Plan: `langchain-documentation/Plan_0412.md`.
-* Architecture: `langchain-documentation/architecture.md`.
+* LangGraph Workflow: `prompts/LangGraph.prompt.md`
+* Testing Guidelines: `copilot-test-instructions.md`
+* Project Architecture: `docs/architecture.md`
+* React Agent: `docs/react_agent.md`
+* Implementation Plan: `plans/PROJECT_PLAN.yaml`
 
 ## Style
 Follow PEP 8, use type hints, and write clear comments.
+
+## Anti-patterns (do NOT do)
+* **Don't** call `openai.ChatCompletion.create` synchronně – vždy používej async varianty.
+* **Don't** re-implement retry logiku; používej `tenacity` nebo LangChain `Retry` wrapper.
+* **Don't** importuj `AgentExecutor`; je zastaralý v LangChain ≥0.3.
+* **Don't** používej `time.sleep` v asynchronním kódu; preferuj `asyncio.sleep`.
+* **Don't** vytvářej vlastní implementace funkcí, které již existují v LangChain nebo LangGraph.
+* **Don't** používej synchronní IO operace v asynchronním kódu.
+* **Don't** míchej přímé volání API (`client.chat.completions.create`) s vysokoúrovňovými abstrakcemi LangChain.
+
+_For unit/integration test conventions see **copilot-test-instructions.md**._

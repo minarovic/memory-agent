@@ -1,0 +1,330 @@
+packages:
+  langchain: "0.3.20"
+  langchain-core: "0.3.x"
+  langchain-anthropic: "0.2.x"
+  langchain-openai: "0.3.4"
+  langgraph: "0.2.70"
+
+meta:
+  title: "Memory Agent PoC - Technický plán"
+  lastUpdate: "2025-04-16"
+  version: 1.0
+
+priority:
+  step: "A4"
+  name: "Unit testy pro tools.py"
+  tasks:
+    - task: "Implementace mocků pro HTTP volání v testech"
+      status: "V PROCESU"
+    - task: "Test pro SayariApiTool._arun (úspěšný scénář)"
+      status: "DOKONČENO"
+    - task: "Test pro SayariApiTool._arun (chybový scénář)"
+      status: "DOKONČENO"
+    - task: "Test pro SupabaseInternalDataTool._arun (úspěšný scénář)"
+      status: "DOKONČENO"
+    - task: "Test pro SupabaseInternalDataTool._arun (chybový scénář)"
+      status: "DOKONČENO"
+    - task: "Test pro SayariRelationshipsTool._arun s úspěšnou odpovědí"
+      status: "TODO"
+    - task: "Test pro SayariRelationshipsTool._arun s prázdným ID"
+      status: "TODO"
+    - task: "Test pro upsert_memory s úspěšným uložením"
+      status: "TODO"
+    - task: "Test pro upsert_memory s chybou"
+      status: "TODO"
+    - task: "Ověření testů spuštěním `make test TEST_FILE=tests/unit_tests/test_tools.py`"
+      status: "TODO"
+
+components:
+  - name: "analyzer.py"
+    desc: "Rozpoznání záměru a analýza dotazu"
+  - name: "tools.py"
+    desc: "Nástroje pro přístup k API (Sayari, interní data)"
+  - name: "state.py"
+    desc: "Definice typů pro stavový graf"
+  - name: "graph.py"
+    desc: "Hlavní LangGraph workflow s definicí grafu"
+  - name: "hybrid_workflow.py"
+    desc: "Rozšíření s React agentem pro komplexní scénáře"
+
+types:
+  - name: "State"
+    file: "state.py"
+    desc: "Stav workflow pro analýzu společností"
+    fields:
+      - name: "messages"
+        type: "List[BaseMessage]"
+        desc: "Zprávy v konverzaci"
+      - name: "company_analysis"
+        type: "Optional[AnalysisResult]"
+        desc: "Výsledek analýzy dotazu"
+      - name: "company_data"
+        type: "Dict[str, Any]"
+        desc: "Externí data o společnostech (klíč: jméno společnosti)"
+      - name: "internal_data"
+        type: "Dict[str, Any]"
+        desc: "Interní data o společnostech"
+      - name: "relationships_data"
+        type: "Dict[str, Any]"
+        desc: "Data o vztazích společností"
+      - name: "output"
+        type: "Optional[str]"
+        desc: "Finální výstup pro uživatele"
+      - name: "errors"
+        type: "List[str]"
+        desc: "Seznam chyb během zpracování"
+  
+  - name: "AnalysisResult"
+    file: "analyzer.py"
+    desc: "Výsledek analýzy uživatelského dotazu"
+    fields:
+      - name: "companies"
+        type: "List[str]"
+        desc: "Seznam identifikovaných společností"
+      - name: "company"
+        type: "str"
+        desc: "Primární společnost (první v seznamu)"
+      - name: "analysis_type"
+        type: "Literal['risk_comparison', 'common_suppliers', 'general']"
+        desc: "Typ požadované analýzy"
+      - name: "query"
+        type: "str"
+        desc: "Původní dotaz uživatele"
+      - name: "is_company_analysis"
+        type: "bool"
+        desc: "Indikuje, zda se jedná o analýzu společnosti"
+      - name: "confidence"
+        type: "float"
+        desc: "Míra jistoty analýzy (0.0 - 1.0)"
+
+tools:
+  - name: "SayariApiTool"
+    file: "tools.py"
+    desc: "Nástroj pro volání Sayari API"
+    props:
+      - name: "name"
+        value: "sayari_api_tool"
+      - name: "base_url"
+        value: "https://zyjgjpdwpdgfrpilxvvg.supabase.co/functions/v1/sayari-simulator"
+  
+  - name: "SupabaseInternalDataTool"
+    file: "tools.py"
+    desc: "Nástroj pro získání interních dat o společnosti"
+    props:
+      - name: "name"
+        value: "supabase_internal_data_tool"
+      - name: "base_url"
+        value: "https://zyjgjpdwpdgfrpilxvvg.supabase.co/functions/v1/get-supplier-data"
+  
+  - name: "SayariRelationshipsTool"
+    file: "tools.py"
+    desc: "Nástroj pro získání vztahů entity z Sayari API"
+    props:
+      - name: "name"
+        value: "sayari_relationships_tool"
+
+steps:
+  - phase: "A"
+    name: "Základní komponenty"
+    items:
+      - id: "A1"
+        name: "analyzer.py - Implementace analyzátoru"
+        status: "DOKONČENO"
+      - id: "A2"
+        name: "Unit testy pro analyzer.py"
+        status: "DOKONČENO"
+      - id: "A3" 
+        name: "tools.py - Implementace nástrojů pro API"
+        status: "DOKONČENO"
+      - id: "A4"
+        name: "Unit testy pro tools.py"
+        status: "V PROCESU"
+        progress: 50
+        tasks:
+          - desc: "Test pro SayariApiTool._arun s úspěšnou odpovědí"
+            status: "DOKONČENO"
+          - desc: "Test pro SayariApiTool._arun s chybovou odpovědí"
+            status: "DOKONČENO"
+          - desc: "Test pro SupabaseInternalDataTool._arun s úspěšnou odpovědí"
+            status: "DOKONČENO"
+          - desc: "Test pro SupabaseInternalDataTool._arun s chybovou odpovědí"
+            status: "DOKONČENO"
+          - desc: "Test pro SayariRelationshipsTool._arun s úspěšnou odpovědí"
+            status: "TODO"
+          - desc: "Test pro SayariRelationshipsTool._arun s prázdným ID"
+            status: "TODO"
+          - desc: "Test pro upsert_memory s úspěšným uložením"
+            status: "TODO"
+          - desc: "Test pro upsert_memory s chybou"
+            status: "TODO"
+  
+  - phase: "B"
+    name: "LangGraph workflow"
+    blockedBy: ["A4"]
+    status: "BLOKOVÁNO"
+    items:
+      - id: "B1"
+        name: "graph.py:analyze_company_input"
+        status: "TODO"
+        tasks:
+          - desc: "Implementace funkce přijímající State"
+            status: "TODO"
+          - desc: "Volání analyze_query z analyzer.py"
+            status: "TODO"
+          - desc: "Správné aktualizace stavu"
+            status: "TODO"
+          - desc: "Ošetření chyb"
+            status: "TODO"
+      - id: "B2"
+        name: "graph.py:fetch_company_data"
+        status: "TODO"
+        tasks:
+          - desc: "Implementace volání SayariApiTool"
+            status: "TODO"
+          - desc: "Zpracování výsledků do stavu"
+            status: "TODO"
+      - id: "B3"
+        name: "graph.py:fetch_internal_data"
+        status: "TODO"
+        tasks:
+          - desc: "Implementace volání SupabaseInternalDataTool"
+            status: "TODO"
+          - desc: "Zpracování výsledků do stavu"
+            status: "TODO"
+      - id: "B4"
+        name: "graph.py:fetch_relationships"
+        status: "TODO"
+        tasks:
+          - desc: "Implementace volání SayariRelationshipsTool"
+            status: "TODO"
+          - desc: "Zpracování výsledků do stavu"
+            status: "TODO"
+      - id: "B5"
+        name: "graph.py:build_company_analysis_graph"
+        status: "TODO"
+        tasks:
+          - desc: "Definice uzlů grafu"
+            status: "TODO"
+          - desc: "Definice podmíněných přechodů"
+            status: "TODO"
+          - desc: "Routovací funkce pro větvení grafu"
+            status: "TODO"
+
+  - phase: "C"
+    name: "Hybridní workflow s React agentem"
+    blockedBy: ["B"]
+    status: "BLOKOVÁNO"
+    items:
+      - id: "C1"
+        name: "hybrid_workflow.py:create_data_gathering_agent"
+        status: "TODO"
+        tasks:
+          - desc: "Implementace @tool funkcí pro nástroje"
+            status: "TODO"
+          - desc: "Sestavení React agenta pomocí create_react_agent"
+            status: "TODO"
+          - desc: "Tvorba systémového promptu pro agenta"
+            status: "TODO"
+      - id: "C2"
+        name: "hybrid_workflow.py:gather_company_data_node"
+        status: "TODO"
+        tasks:
+          - desc: "Implementace uzlu pro LangGraph"
+            status: "TODO"
+          - desc: "Logika pro iteraci přes více společností"
+            status: "TODO"
+          - desc: "Zpracování výsledků agenta"
+            status: "TODO"
+
+  - phase: "D"
+    name: "Testování a dokončení"
+    blockedBy: ["B", "C"]
+    status: "BLOKOVÁNO"
+    items:
+      - id: "D1"
+        name: "Integrační testy"
+        status: "TODO"
+        tasks:
+          - desc: "Test pro jednotlivé kroky grafu s mocky"
+            status: "TODO"
+          - desc: "Test pro celý workflow s různými vstupními dotazy"
+            status: "TODO"
+          - desc: "Test pro React agenta zpracovávajícího více společností"
+            status: "TODO"
+      - id: "D2"
+        name: "Aktualizace README"
+        status: "TODO"
+        tasks:
+          - desc: "Popis instalace a spuštění"
+            status: "TODO"
+          - desc: "Popis architektury a workflow"
+            status: "TODO"
+          - desc: "Příklady použití"
+            status: "TODO"
+
+rules:
+  - "Každý krok má jasně definované výstupy a testovací požadavky"
+  - "Nelze přejít na následující krok, dokud nejsou současné kroky DOKONČENY"
+  - "Status DOKONČENO lze přidělit jen když jsou všechny podúkoly označeny, testy prochází a code review bylo provedeno"
+
+todo:
+  - id: 1
+    name: "Dokončit testy pro SayariRelationshipsTool"
+    priority: "high"
+    status: "TODO"
+    subtasks:
+      - "Vytvořit test pro úspěšné volání `_arun` s validním ID"
+      - "Vytvořit test pro volání `_arun` s prázdným ID"
+      - "Ověřit správné zpracování výsledných dat"
+  
+  - id: 2
+    name: "Implementovat testy pro upsert_memory funkci"
+    priority: "high"
+    status: "TODO"
+    subtasks:
+      - "Připravit mock objekty pro BaseStore a Configuration"
+      - "Vytvořit test pro úspěšné uložení paměti"
+      - "Vytvořit test pro zpracování chyby při ukládání"
+      - "Otestovat automatické generování UUID"
+      - "Otestovat zpracování chyby při extrakci user_id"
+  
+  - id: 3
+    name: "Spustit a validovat všechny testy"
+    priority: "high"
+    status: "TODO"
+    subtasks:
+      - "Spustit pomocí `make test TEST_FILE=tests/unit_tests/test_tools.py`"
+      - "Ověřit, že všechny testy prochází"
+      - "Zkontrolovat pokrytí kódu testy"
+
+dependencies:
+  graph:
+    - from: "A1"
+      to: ["A2", "A3"]
+    - from: "A3"
+      to: ["A4"]
+    - from: "A4"
+      to: ["B1", "B2"]
+    - from: "B1"
+      to: ["B5"]
+    - from: "B2"
+      to: ["B3"]
+    - from: "B3"
+      to: ["B4"]
+    - from: "B4"
+      to: ["B5"]
+    - from: "B5"
+      to: ["C1", "D1"]
+    - from: "C1"
+      to: ["C2"]
+    - from: "C2"
+      to: ["D1"]
+    - from: "D1"
+      to: ["D2"]
+
+markers:
+  - "TODO"
+  - "FIXME"
+  - "BLOKOVÁNO"
+  - "V PROCESU"
+  - "DOKONČENO"

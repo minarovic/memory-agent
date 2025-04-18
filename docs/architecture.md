@@ -163,3 +163,19 @@ class AnalysisResult(TypedDict):
 3. **Škálovatelnost** - Možnost paralelizace zpracování dat o více společnostech
 4. **Čitelnost** - Přehledná struktura kódu a jasný tok dat
 5. **Udržitelnost** - Jednotlivé komponenty lze testovat a aktualizovat nezávisle
+
+## Decision Tree (components)
+| Use‑case                 | Component    |
+|--------------------------|-------------|
+| Simple transform         | LCEL        |
+| Complex multi‑tool       | React Agent |
+| Multi‑step orchestration | LangGraph   |
+
+## Anti‑patterns
+- Nepoužívej synchronní IO v async kódu (např. `time.sleep`, synchronní requests).
+- Nepoužívej zastaralý `AgentExecutor`.
+- Neimplementuj znovu funkce, které poskytuje LangChain nebo LangGraph.
+- Nemíchej přímé volání API s LangChain abstrakcemi.
+- Nepiš vlastní retry logiku, použij `tenacity` nebo LangChain `Retry`.
+
+_For unit/integration test conventions see **copilot-test-instructions.md**._

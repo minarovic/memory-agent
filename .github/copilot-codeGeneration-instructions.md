@@ -40,51 +40,12 @@ For detailed architecture information, see `langchain-documentation/architecture
 * **Structured data handling**: Use Pydantic models and TypedDict
 * **External system integration**: Use specialized tools as `BaseTool` subclasses
 
-## Code Generation Guidelines
+## Code Generation Examples
 
-When generating code for specific tasks, adhere to these concise guidelines:
+Všechny praktické příklady generování kódu pro Memory Agent najdete v:
 
-* **Testing:** See detailed instructions in `copilot-test-instructions.md`.
-* **LangGraph (`graph.py`):**
-    * Define State using `TypedDict`.
-    * Nodes are `async` functions accepting `state` and returning update dictionaries.
-    * Use conditional edges (`add_conditional_edges`) based on `state` for routing.
-* **Tools (`tools.py`):**
-    * Implement as `BaseTool` subclasses with `name`, `description`.
-    * Use `args_schema` (Pydantic) for complex inputs if needed.
-    * Prefer `async def _arun(...)` for I/O operations; implement core logic there. Handle errors using `ToolException` or return error messages.
-* **LCEL Chains:**
-    * Compose chains using the pipe operator (`|`).
-    * Combine standard `Runnable` components (Prompts, Models, Parsers, `RunnableParallel`, `RunnableLambda`, `itemgetter`).
-* **Analyzer (`analyzer.py`):**
-    * Use an LCEL chain (`ChatPromptTemplate | ChatModel | StrOutputParser`) to extract "Company; type" string from the user query.
-    * Parse the string result robustly into the `AnalysisResult` TypedDict.
-* **React Agents (in LangGraph):**
-    * Use `langgraph.prebuilt.create_react_agent` to create React agents as specialized nodes.
-    * Implement tools as functions decorated with `@tool`.
-    * Design system prompts that guide the agent through complex decision trees.
+- [docs/code_generation_examples.md](../docs/code_generation_examples.md)
 
-## Hybrid Architecture Implementation
+Hlavní pravidla, balíčky a architektura jsou popsány v `.github/copilot-instructions.md`.
 
-For complex workflows requiring both orchestration and flexible tool use:
-
-1. **Define a TypedDict-based State** that captures all relevant data flow through the workflow
-2. **Create specialized tools** using either `@tool` decorator or `BaseTool` subclasses
-3. **Implement React Agent node** that can make complex decisions with multiple tools
-4. **Create LangGraph workflow** with regular nodes and React Agent nodes
-5. **Use conditional edges** to route between different processing paths based on state changes
-
-See detailed implementation examples in `langchain-documentation/react_agent_implementation.md`.
-
-## Style
-* Follow PEP 8.
-* Use type hints (`typing`).
-* Write clear comments, especially for complex LangChain/LangGraph logic.
-
-## Additional References
-For detailed instructions on specific aspects, consult:
-* LCEL Chains: `copilot-LCEL-Chain-instructions.md`
-* LangGraph Workflow: `prompts/LangGraph.prompt.md`
-* Testing: `copilot-test-instructions.md`
-* Implementation Plan: `langchain-documentation/Plan_0412.md`
-* Architecture: `langchain-documentation/architecture.md`
+_For unit/integration test conventions see **copilot-test-instructions.md**._
