@@ -2,11 +2,11 @@
 
 ## 1. Základní informace
 
-**Status:** V PROCESU  
+**Status:** DOKONČENO (implementace) / V PROCESU (testy)  
 **Popis:** Nástroje pro přístup k externím API (Sayari) a interním datovým zdrojům (Supabase) pro získávání informací o společnostech a jejich vztazích.  
-**Verze:** 1.1  
+**Verze:** 1.2  
 **Priorita:** Vysoká  
-**Stav implementace:** 80% dokončeno (chybí dokončit testy pro SayariRelationshipsTool a upsert_memory)
+**Stav implementace:** 100% dokončeno (implementace), 70% dokončeno (testy - chybí dokončit testy pro SayariRelationshipsTool a upsert_memory)
 
 ### Závislosti
 - `httpx`: Pro asynchronní HTTP požadavky
@@ -91,6 +91,74 @@ Nástroj pro získání vztahů entity z Sayari API.
 - `def _get_edge_color(self, edge_type: str) -> str`: Určení barvy hrany podle typu vztahu
 
 **Status:** V PROCESU (čeká na testy pro úspěšnou odpověď a prázdné ID)
+
+## Příklady použití
+
+### Implementace nástroje
+```python
+class SayariApiTool(BaseTool):
+    name = "sayari_api_tool"
+    description = "Získává informace o společnosti z Sayari API"
+    base_url: ClassVar[str] = "https://api.sayari.com/graphapi/search/entity"
+    
+    async def _arun(self, company_name: str) -> Dict[str, Any]:
+        """Asynchronně získá data o společnosti ze Sayari API."""
+        try:
+            # Příprava URL s parametry
+            url = f"{self.base_url}?q={company_name}"
+            
+            # Asynchronní volání API
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url)
+                response.raise_for_status()  # Vyvolá výjimku při chybové odpovědi
+                data = response.json()
+            
+            # Zpracování dat
+            result = {
+                "company": company_name,
+                "external_data": {"has_results": False, "entities": []},
+                "entity_id": None,
+                "risk_analysis": {
+                    "sanctions_status": "Neznámé",
+                    "pep_connections": [],
+                    "compliance_issues": [],
+                    "risk_score": "0",
+                    "risk_factors": []
+                }
+            }
+            
+            # Extrakce entit, pokud existují
+            entities = self._extract_entities(data)
+            if entities:
+                result["external_data"]["has_results"] = True
+                result["external_data"]["entities"] = entities
+                result["entity_id"] = self._extract_entity_id(data)
+                result["risk_analysis"] = self._extract_risk_data(data)
+            
+            return result
+            
+        except Exception as e:
+            raise Exception(f"Error fetching data from Sayari API: {str(e)}")
+```
+
+### Použití nástroje ve workflow
+```python
+async def fetch_company_data(state: State, config: RunnableConfig) -> dict:
+    """Získá data o společnosti pomocí Sayari API."""
+    try:
+        # Získání informací o společnosti z předchozího kroku
+        company_name = state.company_analysis.get("company", "")
+        
+        # Použití nástroje pro volání API
+        sayari_tool = SayariApiTool()
+        company_data = await sayari_tool._arun(company_name)
+        
+        # Aktualizace stavu
+        return {"company_data": company_data}
+    except Exception as e:
+        logger.error(f"Error in fetch_company_data: {str(e)}")
+        return {}
+```
 
 ## 3. Historie změn
 

@@ -8,19 +8,25 @@ packages:
 meta:
   title: "Memory Agent PoC - Technický plán"
   lastUpdate: "2025-04-19"  # Updated date
-  version: 1.1  # Increment version
+  version: 1.2  # Increment version
   documentation:
     architecture: "docs/architecture.md"
-    lcel_guidelines: "docs/lcel_guidelines.md"
+    lcel_documentation: "docs/lcel_documentation.md"
     react_agent: "docs/react_agent.md"
     components: "docs/components/"
+    tests:
+      analyzer: "tests/analyzer_tests.md"
+      graph: "tests/graph_tests.md"
+      state: "tests/state_tests.md"
+      tools: "tests/tools_tests.md"
+      hybrid_workflow: "tests/hybrid_workflow_tests.md"
 
 priority:
   step: "A4"
   name: "Unit testy pro tools.py"
   tasks:
     - task: "Implementace mocků pro HTTP volání v testech"
-      status: "V PROCESU"
+      status: "DOKONČENO"
     - task: "Test pro SayariApiTool._arun (úspěšný scénář)"
       status: "DOKONČENO"
     - task: "Test pro SayariApiTool._arun (chybový scénář)"
@@ -30,11 +36,11 @@ priority:
     - task: "Test pro SupabaseInternalDataTool._arun (chybový scénář)"
       status: "DOKONČENO"
     - task: "Test pro SayariRelationshipsTool._arun s úspěšnou odpovědí"
-      status: "TODO"
+      status: "V PROCESU"
     - task: "Test pro SayariRelationshipsTool._arun s prázdným ID"
-      status: "TODO"
+      status: "V PROCESU"
     - task: "Test pro upsert_memory s úspěšným uložením"
-      status: "TODO"
+      status: "V PROCESU"
     - task: "Test pro upsert_memory s chybou"
       status: "TODO"
     - task: "Ověření testů spuštěním `make test TEST_FILE=tests/unit_tests/test_tools.py`"
@@ -276,21 +282,20 @@ todo:
   - id: 1
     name: "Dokončit testy pro SayariRelationshipsTool"
     priority: "high"
-    status: "TODO"
+    status: "V PROCESU"
     subtasks:
-      - "Vytvořit test pro úspěšné volání `_arun` s validním ID"
-      - "Vytvořit test pro volání `_arun` s prázdným ID"
-      - "Ověřit správné zpracování výsledných dat"
+      - "Dokončit test pro úspěšné volání `_arun` s validním ID"
+      - "Dokončit test pro volání `_arun` s prázdným ID"
+      - "Ověřit správné zpracování dat z _process_relationships metody"
+      - "Ověřit správné zpracování dat z _create_visualization metody"
   
   - id: 2
     name: "Implementovat testy pro upsert_memory funkci"
     priority: "high"
-    status: "TODO"
+    status: "V PROCESU"
     subtasks:
-      - "Připravit mock objekty pro BaseStore a Configuration"
-      - "Vytvořit test pro úspěšné uložení paměti"
+      - "Dokončit test pro úspěšné uložení paměti"
       - "Vytvořit test pro zpracování chyby při ukládání"
-      - "Otestovat automatické generování UUID"
       - "Otestovat zpracování chyby při extrakci user_id"
   
   - id: 3
@@ -301,6 +306,16 @@ todo:
       - "Spustit pomocí `make test TEST_FILE=tests/unit_tests/test_tools.py`"
       - "Ověřit, že všechny testy prochází"
       - "Zkontrolovat pokrytí kódu testy"
+      
+  - id: 4
+    name: "Pokračovat v implementaci graph.py po dokončení A4"
+    priority: "medium"
+    status: "BLOKOVÁNO"
+    subtasks:
+      - "Implementovat všechny uzly grafu podle definovaného API"
+      - "Implementovat rozhodovací funkce pro podmíněné přechody"
+      - "Sestavit kompletní graf workflow"
+      - "Vytvořit integrační testy pro graph.py"
 
 dependencies:
   graph:
@@ -349,6 +364,96 @@ components_details:
         status: "DOKONČENO"
         description: "Určení typu požadované analýzy (risk_comparison, common_suppliers, general)"
     tests:
+      - test_name: "test_analyze_query"
+        status: "DOKONČENO"
+        description: "Test analýzy dotazu s různými typy vstupů"
+  
+  - component: "tools.py"
+    description: "Nástroje pro přístup k API (Sayari, interní data)"
+    documentation: "docs/components/tools.md"
+    implementation:
+      - feature: "SayariApiTool"
+        status: "DOKONČENO"
+        description: "Nástroj pro volání Sayari API a získání informací o společnosti"
+      - feature: "SupabaseInternalDataTool"
+        status: "DOKONČENO"
+        description: "Nástroj pro získání interních dat o společnosti ze Supabase"
+      - feature: "SayariRelationshipsTool"
+        status: "DOKONČENO"
+        description: "Nástroj pro získání vztahů entity z Sayari API"
+      - feature: "upsert_memory"
+        status: "DOKONČENO"
+        description: "Funkce pro ukládání a aktualizaci paměti"
+    tests:
+      - test_name: "test_sayari_api_tool"
+        status: "V PROCESU"
+        description: "Testy pro SayariApiTool._arun"
+      - test_name: "test_supabase_internal_data_tool"
+        status: "V PROCESU"
+        description: "Testy pro SupabaseInternalDataTool._arun"
+      - test_name: "test_sayari_relationships_tool"
+        status: "TODO"
+        description: "Testy pro SayariRelationshipsTool._arun"
+      - test_name: "test_upsert_memory"
+        status: "TODO"
+        description: "Testy pro upsert_memory funkci"
+        
+  - component: "graph.py"
+    description: "Hlavní LangGraph workflow s definicí grafu"
+    documentation: "docs/components/graph.md"
+    implementation:
+      - feature: "analyze_company_input"
+        status: "V PROCESU (BLOKOVÁNO)"
+        description: "Implementace uzlu pro analýzu uživatelského vstupu"
+      - feature: "fetch_company_data"
+        status: "V PROCESU (BLOKOVÁNO)"
+        description: "Implementace uzlu pro získání dat o společnosti"
+      - feature: "fetch_internal_data"
+        status: "V PROCESU (BLOKOVÁNO)"
+        description: "Implementace uzlu pro získání interních dat"
+      - feature: "fetch_relationships"
+        status: "V PROCESU (BLOKOVÁNO)"
+        description: "Implementace uzlu pro získání vztahů společnosti"
+      - feature: "generate_response"
+        status: "V PROCESU (BLOKOVÁNO)"
+        description: "Implementace uzlu pro generování odpovědi"
+      - feature: "store_memory"
+        status: "V PROCESU (BLOKOVÁNO)"
+        description: "Implementace uzlu pro ukládání do paměti"
+      - feature: "build_company_analysis_graph"
+        status: "V PROCESU (BLOKOVÁNO)"
+        description: "Sestavení grafu pro analýzu společností"
+    tests:
+      - test_name: "integration_tests"
+        status: "PLÁNOVANÉ"
+        description: "Integrační testy pro workflow grafu"
+        
+  - component: "hybrid_workflow.py"
+    description: "Rozšíření s React agentem pro komplexní scénáře"
+    documentation: "docs/components/hybrid_workflow.md"
+    implementation:
+      - feature: "create_data_gathering_agent"
+        status: "BLOKOVÁNO"
+        description: "Vytvoření specializovaného React agenta pro sběr dat"
+      - feature: "gather_company_data_node"
+        status: "BLOKOVÁNO"
+        description: "Implementace uzlu pro sběr dat o více společnostech"
+    tests:
+      - test_name: "integration_tests"
+        status: "PLÁNOVANÉ"
+        description: "Testy pro React agenta zpracovávajícího více společností"
+        
+  - component: "state.py"
+    description: "Definice typů pro stavový graf"
+    documentation: "docs/components/state.md"
+    implementation:
+      - feature: "State"
+        status: "DOKONČENO"
+        description: "Definice typu State pro workflow"
+    tests:
+      - test_name: "basic_tests"
+        status: "PLÁNOVANÉ"
+        description: "Základní testy pro State typovou definici"
       - test: "tests/unit_tests/test_analyzer.py"
         status: "DOKONČENO"
       - test: "tests/integration_tests/test_analyzer_integration.py"

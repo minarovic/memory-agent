@@ -1,8 +1,8 @@
 # Hybrid Workflow Component Documentation
 
 ## Základní informace
-- **Status:** V PROCESU
-- **Popis:** Hybridní implementace workflow s využitím LangGraph pro celkový tok a React agentů pro komplexní uzly. Tato komponenta rozšiřuje základní LangGraph workflow o specializované React agenty, kteří jsou schopni řešit složitější úlohy vyžadující kombinaci nástrojů, rozhodování a plánování kroků při analýze společností.
+- **Status:** BLOKOVÁNO
+- **Popis:** Hybridní implementace workflow s využitím LangGraph pro celkový tok a React agentů pro komplexní uzly. Tato komponenta rozšiřuje základní LangGraph workflow o specializované React agenty, kteří jsou schopni řešit složitější úlohy vyžadující kombinaci nástrojů, rozhodování a plánování kroků při analýze společností. Komponenta je aktuálně blokována dokončením implementace LangGraph workflow (B1-B5).
 - **Závislosti:**
   - **Externí knihovny:**
     - `langchain.chat_models`: Pro inicializaci chat modelů
@@ -68,6 +68,84 @@
   - Zachycení výjimek při selhání agenta
   - Logování průběhu zpracování
   - Ošetření situací, kdy agent nemůže získat potřebná data
+
+## Příklady použití
+
+### Implementace React Agent Node
+
+```python
+def create_data_gathering_agent(llm):
+    """Vytvoří specializovaného React agenta pro sběr dat o společnostech."""
+    # Definice dostupných nástrojů pro agenta
+    tools = [
+        SayariApiTool(),
+        SupabaseInternalDataTool(),
+        SayariRelationshipsTool()
+    ]
+    
+    # Systémový prompt pro agenta
+    system_prompt = """
+    Jsi specializovaný agent pro získávání dat o společnostech.
+    
+    Tvým úkolem je získat co nejvíce relevantních informací o zadaných společnostech
+    pomocí dostupných nástrojů. Postupuj systematicky a logicky:
+    
+    1. Nejprve získej základní informace o společnosti pomocí sayari_api_tool
+    2. Pokud je k dispozici ID entity, získej detailní vztahy pomocí sayari_relationships_tool
+    3. Získej interní data o společnosti pomocí supabase_internal_data_tool
+    
+    Uveď zdroj každé informace a označ případné rozdíly nebo nesrovnalosti v datech
+    z různých zdrojů. Po dokončení sběru dat poskytni strukturovaný souhrn.
+    """
+    
+    # Vytvoření React agenta pomocí LangGraph prebuilt funkce
+    agent_executor, agent_tools = create_react_agent(
+        llm=llm,
+        tools=tools,
+        prompt=system_prompt
+    )
+    
+    return agent_executor, agent_tools
+
+async def gather_company_data_node(state: State, config: RunnableConfig) -> Dict[str, Any]:
+    """Uzel grafu pro sběr dat o společnostech pomocí specializovaného React agenta."""
+    try:
+        # Získání analýzy dotazu ze stavu
+        company_analysis = state.get("company_analysis", {})
+        if not company_analysis or not company_analysis.get("is_company_analysis"):
+            logger.warning("No company analysis available for data gathering")
+            return {}
+        
+        # Seznam společností k analýze
+        companies = company_analysis.get("companies", [])
+        if not companies:
+            logger.warning("No companies found in analysis")
+            return {}
+        
+        # Inicializace modelu a vytvoření agenta
+        llm = init_chat_model()
+        agent, _ = create_data_gathering_agent(llm)
+        
+        # Sběr dat pro každou společnost
+        all_company_data = {}
+        for company in companies:
+            # Zadání úkolu agentovi
+            agent_input = f"Získej kompletní informace o společnosti {company}"
+            result = await agent.ainvoke({"input": agent_input}, config)
+            
+            # Zpracování a uložení výsledku
+            all_company_data[company] = {
+                "agent_result": result,
+                "collected_data": _extract_structured_data(result)
+            }
+        
+        # Vrácení aktualizace stavu
+        return {"companies_data": all_company_data}
+    
+    except Exception as e:
+        logger.error(f"Error in gather_company_data_node: {str(e)}")
+        return {"errors": [f"Failed to gather company data: {str(e)}"]}
+```
 
 ## Historie změn
 

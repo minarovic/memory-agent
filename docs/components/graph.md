@@ -1,8 +1,8 @@
 # Graph Component Documentation
 
 ## Základní informace
-- **Status:** V PROCESU
-- **Popis:** Hlavní komponenta pro workflow orchestraci v Memory Agent projektu. Implementuje LangGraph workflow pro analýzu společností, který zpracovává uživatelské dotazy, získává data z externích zdrojů a generuje strukturované odpovědi.
+- **Status:** V PROCESU (BLOKOVÁNO)
+- **Popis:** Hlavní komponenta pro workflow orchestraci v Memory Agent projektu. Implementuje LangGraph workflow pro analýzu společností, který zpracovává uživatelské dotazy, získává data z externích zdrojů a generuje strukturované odpovědi. Aktuálně blokováno dokončením unit testů pro tools.py (A4).
 - **Závislosti:**
   - **Externí knihovny:**
     - `langchain` (chat_models)
@@ -190,6 +190,75 @@
 - **Zpracování chyb:**
   - Zachycuje všechny výjimky a loguje je
   - V případě kritické chyby při sestavení grafu propaguje výjimku dále
+
+## Příklady použití
+
+### Implementace uzlu grafu
+```python
+async def analyze_company_input(state: State, config: RunnableConfig) -> dict:
+    """Analyzuje vstup uživatele pro identifikaci společností a typu analýzy."""
+    try:
+        logger.info("Starting analyze_company_input node")
+        
+        # Získání posledního uživatelského vstupu
+        last_user_msg = None
+        for msg in reversed(state.messages):
+            if hasattr(msg, 'role') and msg.role == "user":
+                last_user_msg = msg
+                break
+        
+        if not last_user_msg:
+            logger.warning("No user message found for analysis")
+            return {}
+        
+        # Extrahování textu zprávy
+        query = last_user_msg.content
+        
+        # Provedení analýzy
+        analysis_result = await analyze_query(query, config)
+        logger.info(f"Analysis result: {analysis_result}")
+        
+        # Aktualizace stavu
+        return {"company_analysis": analysis_result}
+    except Exception as e:
+        logger.error(f"Error in analyze_company_input: {str(e)}")
+        logger.error(traceback.format_exc())
+        return {}
+```
+
+### Definice stavového grafu
+```python
+# Definice grafu s výchozím stavem
+workflow = StateGraph(State)
+
+# Definice uzlů grafu
+workflow.add_node("analyze_input", analyze_company_input)
+workflow.add_node("fetch_company_data", fetch_company_data)
+workflow.add_node("fetch_internal_data", fetch_internal_data)
+workflow.add_node("fetch_relationships", fetch_relationships)
+workflow.add_node("generate_response", generate_response)
+workflow.add_node("store_memory", store_memory)
+
+# Definice hran grafu
+workflow.set_entry_point("analyze_input")
+
+workflow.add_conditional_edges(
+    "analyze_input",
+    should_analyze_companies,
+    {
+        "analyze": "fetch_company_data"
+    }
+)
+
+workflow.add_conditional_edges(
+    "fetch_company_data",
+    should_fetch_company_data,
+    {
+        "fetch": "fetch_internal_data",
+        "skip": "generate_response"
+    }
+)
+```
 
 ## Historie změn
 

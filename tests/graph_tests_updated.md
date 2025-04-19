@@ -1,4 +1,4 @@
-<!-- filepath: /Users/marekminarovic/claude-code/memory-agent/tests/graph_tests.md -->
+<!-- filepath: /Users/marekminarovic/claude-code/memory-agent/tests/graph_tests_updated.md -->
 # Tests Documentation for graph.py Component
 
 ## Kritéria dokončení
@@ -101,35 +101,39 @@
 
 - **should_analyze_companies**
   - **Status**: PLÁNOVANÉ
-  - **Ověření**: Konzistentní návrat "analyze"
+  - **Ověření**: Funkce vždy vrací "analyze", test s různými stavy
 
 - **should_fetch_company_data**
   - **Status**: PLÁNOVANÉ
-  - **Ověření**: Stavová podmínka s is_company_analysis
+  - **Ověření**: Testování různých stavů company_analysis
 
 - **should_fetch_relationships**
   - **Status**: PLÁNOVANÉ
-  - **Ověření**: Stavová podmínka s entity_id a typem analýzy
+  - **Ověření**: Testování stavů s entity_id, různými typy analýzy
 
 ### Funkce: build_company_analysis_graph
 
-- **Ověření struktury vytvořeného grafu**
+- **Struktura vytvořeného grafu**
   - **Status**: PLÁNOVANÉ
   - **Ověření**: Počet uzlů, vstupní uzel, podmíněné přechody, hrany
+
+- **Chování při výjimce**
+  - **Status**: PLÁNOVANÉ
+  - **Ověření**: Simulace výjimky během sestavování grafu, logování chyby
 
 ## Integritní testy
 
 - **End-to-end test celého workflow**
   - **Status**: PLÁNOVANÉ
-  - **Ověření**: Průchod přes všechny očekávané uzly, finální stav s odpovědí
+  - **Ověření**: Simulace dotazu na společnost, průchod všemi uzly
 
-- **Průchod workflow s dotazem nesouvisejícím s firmou**
+- **Test workflow s obecným dotazem**
   - **Status**: PLÁNOVANÉ
-  - **Ověření**: Přeskočení uzlů pro získávání dat, generování obecné odpovědi
+  - **Ověření**: Simulace obecného dotazu, přeskočení uzlů pro získávání dat
 
-- **Schopnost workflow zotavit se z chyb**
+- **Test schopnosti zotavit se z chyb**
   - **Status**: PLÁNOVANÉ
-  - **Ověření**: Chyba v jednom z uzlů, pokračování ke generate_response
+  - **Ověření**: Simulace chyby v jednom z uzlů, pokračování workflow
 
 ---
 
