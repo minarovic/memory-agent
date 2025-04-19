@@ -1,83 +1,48 @@
-# Base Instructions for GitHub Copilot - Memory Agent Project
+# Copilot Instructions for Memory Agent Project
 
-## Context
-Project: Memory Agent (Python) - AI agent for company analysis that uses external and internal data sources to provide insights on companies and their relationships.
+This guide provides basic instructions for AI assistants working with the Memory Agent project code.
 
-## Packages and Versions
-Use these packages with their minimum versions:
-* **langchain**: 0.3.20 - Main framework
-* **langchain-core**: 0.3.x - Core components
-* **langchain-anthropic**: 0.2.x - For Claude integration
-* **langchain-openai**: 0.3.4 - For OpenAI integration
-* **langgraph**: 0.2.70 - For workflow orchestration
+## 1. Basic Principles of Code Analysis
 
+- **Project Architecture:** When analyzing, always consider the hybrid architecture of the project (LangGraph workflow + React Agents + LCEL chains)
+- **Workflow Components:** Identify whether the analyzed code belongs to workflow orchestration (LangGraph), tools (Tools), or chains (Chains)
+- **Standards Compliance:** Check whether the code correctly uses LangChain and LangGraph components according to current versions (≥0.3.x)
+- **Asynchronous Operations:** Verify that the code properly implements asynchronous calls using `async/await` and not synchronous calls
+- **State Management:** When analyzing workflow components, pay attention to state management using the `State` object in LangGraph
 
-## Main Rule: Use LangChain with LangGraph!
-When generating Python code for working with LLMs, agents, RAG, prompts, tools, or chains, **always prioritize and use standard components and practices of the LangChain framework and LangGraph for workflow orchestration.**
+## 2. How to Work with Component Documentation
 
-* **Prefer LangGraph** for building agent workflows with state management. Legacy `AgentExecutor` is deprecated.
-* **Use LCEL** (LangChain Expression Language) for simpler, stateless operations.
-* **Avoid** alternative libraries (Haystack, LlamaIndex) unless explicitly requested.
-* **Do not reimplement** existing LangChain or LangGraph functionality.
+- **Documentation Location:** All component documentation is located in the `docs/components/` directory
+- **Documentation Structure:** Each component should contain:
+  - Purpose and basic description
+  - Input and output data structures
+  - Dependencies on other components
+  - Usage examples
+- **Documentation Updates:** When changes are made to the implementation, the corresponding documentation must be updated as well
+- **API References:** When working with external APIs (Sayari, Supabase), always refer to the current documentation in `docs/`
 
-## Model Reasoning Behavior
+## 3. How to Verify Implementation
 
-When responding to complex questions or generating code:
+- **Unit Tests:** Each new function must have corresponding unit tests in the `tests/unit_tests/` directory
+- **Integration Tests:** More complex workflows must have integration tests in `tests/integration_tests/`
+- **Type Checks:** Use type annotations and verify correctness using `mypy`
+- **Checkpoints:**
+  - Are the correct LangChain/LangGraph components being used?
+  - Are all operations asynchronous where appropriate?
+  - Are graph states properly updated?
+  - Is compatibility with existing workflow maintained?
+  - Are error states and exceptions properly handled?
 
-1. **Take time to think step‑by‑step** before providing answers.  
-2. **Break down problems** into manageable components.  
-3. **Consider edge cases and potential issues** with any proposed solution.  
-4. **Explore multiple approaches** before settling on a final recommendation.  
-5. **Provide reasoning** for architectural and implementation decisions.  
-6. **Self‑review** generated code for bugs or inefficiencies before presenting.
+## 4. Task Status
 
-For especially complex problems involving system design, algorithm selection, or optimization, employ thorough reasoning by explicitly:
+### IN PROGRESS
+- Implementation of company relationship analysis
+- Improvement of memory storage and retrieval
+- Optimization of prompts for analysis
 
-- **Defining** the problem space and constraints.  
-- **Identifying** potential solution approaches.  
-- **Evaluating** trade‑offs between approaches.  
-- **Selecting and justifying** the optimal solution path.  
-
-
-## Project Architecture
-Memory Agent uses a **hybrid architecture** that combines:
-
-1. **LangGraph** for overall workflow orchestration and state management
-2. **React Agents** for complex decision-making with multiple tools
-3. **LCEL chains** for simpler data transformations
-
-For detailed architecture information, see `langchain-documentation/architecture.md`.
-
-## Preferred LLM Models
-* For most operations: **Claude 3.7 Sonnet** (`model="claude-3-7-sonnet-20250219"`)
-
-
-## Decision Tree for Component Selection
-* **Simple data transformation**: Use LCEL chain with pipe operator (`|`)
-* **Complex decision-making with tools**: Use React Agent with custom tools
-* **Multi-step orchestration**: Use LangGraph with nodes and conditional edges
-* **Structured data handling**: Use Pydantic models and TypedDict
-* **External system integration**: Use specialized tools as `BaseTool` subclasses
-
-## References to Additional Documentation
-For detailed instructions and examples, consult these files:
-
-* LangGraph Workflow: `prompts/LangGraph.prompt.md`
-* Testing Guidelines: `copilot-test-instructions.md`
-* Project Architecture: `docs/architecture.md`
-* React Agent: `docs/react_agent.md`
-* Implementation Plan: `plans/PROJECT_PLAN.yaml`
-
-## Style
-Follow PEP 8, use type hints, and write clear comments.
-
-## Anti-patterns (do NOT do)
-* **Don't** call `openai.ChatCompletion.create` synchronně – vždy používej async varianty.
-* **Don't** re-implement retry logiku; používej `tenacity` nebo LangChain `Retry` wrapper.
-* **Don't** importuj `AgentExecutor`; je zastaralý v LangChain ≥0.3.
-* **Don't** používej `time.sleep` v asynchronním kódu; preferuj `asyncio.sleep`.
-* **Don't** vytvářej vlastní implementace funkcí, které již existují v LangChain nebo LangGraph.
-* **Don't** používej synchronní IO operace v asynchronním kódu.
-* **Don't** míchej přímé volání API (`client.chat.completions.create`) s vysokoúrovňovými abstrakcemi LangChain.
-
-_For unit/integration test conventions see **copilot-test-instructions.md**._
+### COMPLETED
+- Basic structure of LangGraph workflow
+- Integration of Sayari API for retrieving company data
+- Implementation of Supabase for storing internal data
+- Analysis of user input for extracting companies and analysis type
+- Generating responses based on collected data
