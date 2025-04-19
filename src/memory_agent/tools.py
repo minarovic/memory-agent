@@ -129,6 +129,55 @@ class SayariApiTool(BaseTool):
             logger.error(traceback.format_exc())
             raise ToolException(error_msg)
     
+    def _parse_company_data(self, api_response: Dict[str, Any]) -> Dict[str, Any]:
+        """Zpracuje odpověď z API a extrahuje relevantní data o společnosti.
+        
+        Args:
+            api_response: Surová odpověď z API
+            
+        Returns:
+            Strukturovaná data o společnosti
+        """
+        try:
+            # Implementace
+            result = {
+                "name": "",
+                "risk_score": 0,
+                "industry": "",
+                "founded": None
+            }
+            
+            # Extrahuj data z api_response
+            if not api_response or not api_response.get("data"):
+                logger.warning("Prázdná nebo neplatná odpověď z API")
+                return result
+            
+            entity_data = api_response.get("data", {})
+            
+            # Extrahuj základní informace
+            result["name"] = entity_data.get("label", "")
+            
+            # Konverze risk_score na číslo (integer)
+            try:
+                risk_score = entity_data.get("risk_score", "0")
+                result["risk_score"] = int(risk_score) if risk_score else 0
+            except (ValueError, TypeError):
+                logger.warning(f"Nelze převést risk_score na číslo: {entity_data.get('risk_score')}")
+                result["risk_score"] = 0
+            
+            # Extrahuj informace o průmyslu a datumu založení
+            metadata = entity_data.get("metadata", {})
+            result["industry"] = metadata.get("industry", "")
+            
+            # Zpracování datumu založení (pokud existuje)
+            if "founded" in metadata and metadata["founded"]:
+                result["founded"] = metadata["founded"]
+            
+            return result
+        except Exception as e:
+            logger.error(f"Chyba při zpracování dat společnosti: {str(e)}")
+            return {"error": str(e)}
+    
     def _extract_entities(self, data: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Extrahuje entity z odpovědi API."""
         if not data or not data.get("data"):
