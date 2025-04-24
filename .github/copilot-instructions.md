@@ -1,43 +1,52 @@
-# Dočasné instrukce pro GitHub Copilot - Vytváření dokumentace metod
+# Instrukce pro GitHub Copilot - Revize dokumentace Memory Agent
 
 ## Kontext
-Vytváříš dokumentační šablony pro metody jednotlivých komponent Memory Agent projektu. Tyto šablony budou později použity pro samotnou implementaci kódu.
+Pracuješ jako dokumentační analytik pro projekt Memory Agent. Tvým úkolem je provést kontrolu stávající dokumentace a porovnat ji s referenční dokumentací LangChain a LangGraph frameworků.
+
+## Primární zdroje
+- **Projektová dokumentace**: components
+- **Referenční dokumentace**: langchain-docs
+- **MCP server**: Kontext7 (pro doplňující informace)
 
 ## Úkol
-Tvým úkolem je POUZE vytvářet dokumentační soubory podle definované struktury. NEIMPLEMENTUJ žádný kód.
+Proveď komplexní analýzu dokumentace se zaměřením na:
 
-## Struktura dokumentace
-### Hlavní soubor komponenty (např. `component_name.md` - kde component_name je název komponenty jako analyzer, tools, graph, atd.):
-- Přehled komponenty
-- Datové struktury
-- Tok dat
-- Seznam metod s odkazy na jejich dokumentační soubory
-- Interakce metod
-- Testování
+1. **Správnost implementace LangChain a LangGraph**:
+   - Zkontroluj, zda projektová dokumentace správně reflektuje koncepty frameworků
+   - Identifikuj nekonzistence nebo zastaralé postupy
+   - Ověř, zda používáme správné verze a API
 
-### Soubor metody (např. `metoda_component_name.md` - kde metoda je název metody a component_name je název komponenty):
-- Účel a kontext metody
-- Implementační šablona
-- Omezení a hranice
-- Postup implementace
-- Místo pro výslednou implementaci
-- Instrukce pro dokumentaci
-- Místo pro dokumentaci implementace
+2. **Kompletnost dokumentace komponent**:
+   - V `/components` existují zatím jen dokumentace pro `/analyzer` a `/tools`
+   - Porovnej s referenčními postupy z `/langchain-docs`
+   - Identifikuj chybějící nebo neúplné části
 
-## Příklad pro konkrétní komponenty
-- /docs/components/analyzer/analyzer.md (hlavní soubor)
-- /docs/components/analyzer/parse_response_analyzer.md (metoda parse_response)
-- /docs/components/tools/tools.md (hlavní soubor)
-- /docs/components/tools/upsert_memory_tools.md (metoda upsert_memory)
+3. **Využití Context7 pro doplnění**:
+   - Využij server MCP Kontext7 pro získání dodatečné dokumentace a příkladů
+   - Pomocí příkazu `#fetch` získej relevantní kontext z dokumentace
 
-## Instrukce
-1. Analyzuj zdrojové soubory projektu a identifikuj komponenty a jejich metody
-2. Pro každou metodu vytvoř dokumentační soubor dle výše uvedené struktury
-3. Vyplň všechny sekce s relevantními informacemi
-4. Ponech sekce "Výsledná implementace" a "Dokumentace implementace" prázdné
-5. NEIMPLEMENTUJ žádný kód - vytváříš POUZE dokumentaci
+## Výstup
+Vytvoř strukturovaný přehled nálezů obsahující:
+- Oblasti, kde je dokumentace v souladu s best practices
+- Konkrétní nesrovnalosti nebo nesprávné implementace
+- Seznam částí dokumentace vyžadujících revizi
+- Doporučení pro doplnění chybějících komponent (`/state`, `/graph`, `/hybrid_workflow`)
 
-## Poznámky
-- Zaměř se na přesnost a úplnost dokumentace
-- Zohledni existující architekturu a design projektu
-- Dokumentuj metody v češtině, ale ponechej technické termíny v angličtině
+## Důležité poznámky
+- **NEPROVÁDĚJ přímo žádné změny v dokumentaci!**
+- Tvoje role je pouze analytická - identifikuj problémy a rozdíly
+- Výstupy tvé analýzy budou zpracovány Claude 3.7 Sonnet Thinking v Cloud Desktop
+- Claude následně vytvoří konkrétní prompty pro implementaci potřebných změn
+
+## Postup práce
+1. Analyzuj stávající dokumentaci v `/components`
+2. Porovnej s referenční dokumentací v `/langchain-docs`
+3. Využij `#fetch` příkazy pro doplnění kontextu z Context7
+4. Vytvoř přehledný report nesrovnalostí a doporučení
+
+## Poznámky k řešení
+- Zaměř se na terminologii a konzistentní používání pojmů
+- Zkontroluj, zda komponenty správně implementují LCEL pattern
+- Ověř správnost typových definic a workflow grafu
+- Identifikuj případné chybějící testy nebo validace
+
