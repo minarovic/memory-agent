@@ -1,52 +1,76 @@
-# Instrukce pro GitHub Copilot - Revize dokumentace Memory Agent
+# GitHub Copilot - Pokyny pro modernizaci state.py
+# Tento dokument slouží jako pokyn pro GitHub Copilot k modernizaci souboru state.py v projektu Memory Agent.
+# Zaměřuje se na implementaci moderního state managementu s využitím @dataclass a speciálních anotací LangGraph.
 
-## Kontext
-Pracuješ jako dokumentační analytik pro projekt Memory Agent. Tvým úkolem je provést kontrolu stávající dokumentace a porovnat ji s referenční dokumentací LangChain a LangGraph frameworků.
 
-## Primární zdroje
-- **Projektová dokumentace**: components
-- **Referenční dokumentace**: langchain-docs
-- **MCP server**: Kontext7 (pro doplňující informace)
+
+
+```markdown
+# Modernizace komponenty State v projektu Memory Agent
 
 ## Úkol
-Proveď komplexní analýzu dokumentace se zaměřením na:
+Analyzuj a modernizuj state.py z projektu Memory Agent. Zaměř se na implementaci state management s využitím @dataclass a speciálních anotací LangGraph.
 
-1. **Správnost implementace LangChain a LangGraph**:
-   - Zkontroluj, zda projektová dokumentace správně reflektuje koncepty frameworků
-   - Identifikuj nekonzistence nebo zastaralé postupy
-   - Ověř, zda používáme správné verze a API
+## Současný kód
+Aktuální implementace již používá @dataclass, ale potřebuje rozšíření a vylepšení:
 
-2. **Kompletnost dokumentace komponent**:
-   - V `/components` existují zatím jen dokumentace pro `/analyzer` a `/tools`
-   - Porovnej s referenčními postupy z `/langchain-docs`
-   - Identifikuj chybějící nebo neúplné části
+```python
+"""Define the shared values."""
 
-3. **Využití Context7 pro doplnění**:
-   - Využij server MCP Kontext7 pro získání dodatečné dokumentace a příkladů
-   - Pomocí příkazu `#fetch` získej relevantní kontext z dokumentace
+from __future__ import annotations
 
-## Výstup
-Vytvoř strukturovaný přehled nálezů obsahující:
-- Oblasti, kde je dokumentace v souladu s best practices
-- Konkrétní nesrovnalosti nebo nesprávné implementace
-- Seznam částí dokumentace vyžadujících revizi
-- Doporučení pro doplnění chybějících komponent (`/state`, `/graph`, `/hybrid_workflow`)
+from dataclasses import dataclass, field
+from typing import Optional
 
-## Důležité poznámky
-- **NEPROVÁDĚJ přímo žádné změny v dokumentaci!**
-- Tvoje role je pouze analytická - identifikuj problémy a rozdíly
-- Výstupy tvé analýzy budou zpracovány Claude 3.7 Sonnet Thinking v Cloud Desktop
-- Claude následně vytvoří konkrétní prompty pro implementaci potřebných změn
+from langchain_core.messages import AnyMessage
+from langgraph.graph import add_messages
+from typing_extensions import Annotated
 
-## Postup práce
-1. Analyzuj stávající dokumentaci v `/components`
-2. Porovnej s referenční dokumentací v `/langchain-docs`
-3. Využij `#fetch` příkazy pro doplnění kontextu z Context7
-4. Vytvoř přehledný report nesrovnalostí a doporučení
+from memory_agent.analyzer import AnalysisResult
 
-## Poznámky k řešení
-- Zaměř se na terminologii a konzistentní používání pojmů
-- Zkontroluj, zda komponenty správně implementují LCEL pattern
-- Ověř správnost typových definic a workflow grafu
-- Identifikuj případné chybějící testy nebo validace
+# BLOKOVÁNO(B1): Implementace stavového grafu čeká na dokončení unit testů pro tools.py (A4)
+@dataclass(kw_only=True)
+class State:
+    """Main graph state."""
+
+    messages: Annotated[list[AnyMessage], add_messages]
+    """The messages in the conversation."""
+    
+    company_analysis: Optional[AnalysisResult] = None
+    """Výsledek analýzy společností z uživatelského dotazu."""
+
+
+__all__ = [
+    "State",
+]
+```
+
+## Požadované vylepšení
+1. Zkontroluj, zda implementace plně využívá moderních funkcí LangGraph
+2. Rozšiř State třídu o další standardní atributy používané v moderních LangGraph workflow:
+   - Přidej pole pro ukládání dat o společnostech (`company_data`, `internal_data`, `relationships_data`)
+   - Přidej pole pro chybové stavy a výstup
+   - Zachovej kompatibilitu s existujícím kódem
+
+3. Doplň podrobné docstringy vysvětlující:
+   - Účel každého atributu ve workflow
+   - Jak funguje anotace `add_messages`
+   - Jak State interaguje s ostatními komponentami
+
+4. Využij dokumentaci z Context7 serveru k implementaci nejlepších praktik
+
+## Použití Context7 MCP serveru
+Nejprve získej aktuální dokumentaci k state management v LangGraph:
+
+```
+resolve-library-id --libraryName="langgraph"
+get-library-docs --context7CompatibleLibraryID="langgraph-ai/langgraph" --topic="state"
+```
+
+## Očekávaný výstup
+Kompletní modernizovaný soubor state.py s:
+- Rozšířenou definicí State třídy
+- Podrobnými komentáři a docstringy
+- Implementací moderních přístupů LangGraph k správě stavu
+```
 
